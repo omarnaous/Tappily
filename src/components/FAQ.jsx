@@ -35,7 +35,7 @@ export default function FAQ() {
                   <motion.span
                     animate={{ rotate: isOpen ? 45 : 0 }}
                     transition={{ duration: 0.35 }}
-                    className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition-colors ${isOpen ? 'bg-lime text-ink' : 'bg-card text-ink'}`}
+                    className={`grid h-9 w-9 shrink-0 place-items-center rounded-full transition-colors ${isOpen ? 'bg-accent text-white' : 'bg-card text-ink'}`}
                   >
                     <Plus className="h-4 w-4" />
                   </motion.span>

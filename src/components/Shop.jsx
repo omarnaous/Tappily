@@ -57,7 +57,7 @@ function ProductCard({ product, index, onOpen }) {
           </p>
           <button
             onClick={() => add(product.id, 'stand')}
-            className="flex h-9 cursor-pointer items-center gap-1.5 rounded-full bg-ink px-3 text-[13px] font-semibold text-white transition-colors hover:bg-lime hover:text-ink sm:h-10 sm:px-4"
+            className="flex h-9 cursor-pointer items-center gap-1.5 rounded-full bg-ink px-3 text-[13px] font-semibold text-white transition-colors hover:bg-accent hover:text-white sm:h-10 sm:px-4"
             aria-label={`Add ${product.name} to cart`}
           >
             <Plus className="h-4 w-4" />

@@ -103,7 +103,7 @@ function Dialog({ product, onClose }) {
           <fieldset className="mt-7">
             <legend className="flex w-full items-center justify-between text-sm font-semibold">
               Bundle & save
-              <span className="rounded-full bg-lime px-2 py-0.5 font-mono text-[11px] font-medium">Up to {MAX_SAVE}% off</span>
+              <span className="rounded-full bg-accent px-2 py-0.5 font-mono text-[11px] font-medium text-white">Up to {MAX_SAVE}% off</span>
             </legend>
             <div className="mt-3 flex flex-col gap-2.5" role="radiogroup">
               {BUNDLES.map((b) => {

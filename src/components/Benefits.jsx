@@ -39,7 +39,7 @@ function StepsCard() {
   return (
     <Card className="bg-ink text-white lg:col-span-3">
       <Label dark>Steps to reach you</Label>
-      <p className="mt-3 text-[88px] font-semibold leading-none tracking-[-0.05em] text-lime md:text-[112px]">
+      <p className="mt-3 text-[88px] font-semibold leading-none tracking-[-0.05em] text-accent-light md:text-[112px]">
         <Count from={6} to={1} duration={1.8} delay={0.3} />
         <span className="ml-3 align-middle text-2xl font-medium tracking-tight text-white/60 md:text-3xl">tap</span>
       </p>
@@ -52,7 +52,7 @@ function StepsCard() {
             </div>
             <div className="mt-2 h-3">
               <motion.div
-                className={`h-full rounded-r-[4px] ${r.us ? 'bg-lime shadow-[0_0_24px_rgba(212,255,63,0.6)]' : 'bg-white/15'}`}
+                className={`h-full rounded-r-[4px] ${r.us ? 'bg-accent-light shadow-[0_0_24px_rgba(91,149,255,0.7)]' : 'bg-white/15'}`}
                 initial={{ width: 0 }}
                 whileInView={{ width: `${(r.v / 6) * 100}%` }}
                 viewport={{ once: true }}
@@ -79,7 +79,7 @@ function ReviewsCard() {
   const area = `${line} L${x(data.length - 1)},${H} L${x(0)},${H} Z`
   const last = data.length - 1
   return (
-    <Card className="bg-lime text-ink lg:col-span-3" delay={0.08}>
+    <Card className="bg-accent text-white lg:col-span-3" delay={0.08}>
       <Label>Google reviews per month</Label>
       <p className="mt-3 text-[88px] font-semibold leading-none tracking-[-0.05em] md:text-[112px]">
         +<Count to={46} delay={0.6} />
@@ -91,14 +91,14 @@ function ReviewsCard() {
           role="img"
           aria-label="Reviews per month rise from about 7 to 46 after the tag is added"
         >
-          <line x1="0" x2={W} y1={H} y2={H} stroke="rgba(14,14,12,0.25)" strokeWidth="1" />
-          <line x1={x(added)} x2={x(added)} y1="0" y2={H} stroke="rgba(14,14,12,0.35)" strokeWidth="1" />
-          <text x={x(added) + 8} y="14" className="fill-ink font-mono text-[12px]">
+          <line x1="0" x2={W} y1={H} y2={H} stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
+          <line x1={x(added)} x2={x(added)} y1="0" y2={H} stroke="rgba(255,255,255,0.45)" strokeWidth="1" />
+          <text x={x(added) + 8} y="14" className="fill-white font-mono text-[12px]">
             tag added
           </text>
           <motion.path
             d={area}
-            fill="#0e0e0c"
+            fill="#ffffff"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 0.1 }}
             viewport={{ once: true }}
@@ -107,7 +107,7 @@ function ReviewsCard() {
           <motion.path
             d={line}
             fill="none"
-            stroke="#0e0e0c"
+            stroke="#ffffff"
             strokeWidth="3"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -120,7 +120,7 @@ function ReviewsCard() {
             cx={x(last)}
             cy={y(data[last])}
             r="14"
-            fill="#0e0e0c"
+            fill="#ffffff"
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: [1, 1.8, 1], opacity: [0.25, 0, 0.25] }}
             transition={{ duration: 2, repeat: Infinity, delay: 2.2 }}
@@ -130,8 +130,8 @@ function ReviewsCard() {
             cx={x(last)}
             cy={y(data[last])}
             r="6"
-            fill="#0e0e0c"
-            stroke="#d4ff3f"
+            fill="#ffffff"
+            stroke="#0855d6"
             strokeWidth="2"
             initial={{ scale: 0 }}
             whileInView={{ scale: 1 }}
@@ -183,14 +183,14 @@ function OnceCard() {
   return (
     <Card className="bg-ink text-white lg:col-span-2" delay={0.1}>
       <Label dark>Monthly fees</Label>
-      <p className="mt-3 text-[80px] font-semibold leading-none tracking-[-0.05em] text-lime">$0</p>
+      <p className="mt-3 text-[80px] font-semibold leading-none tracking-[-0.05em] text-accent-light">$0</p>
       <div className="mt-auto grid grid-cols-6 gap-2 pt-8">
         {months.map((m, i) => (
           <motion.div
             key={i}
             className="grid aspect-square place-items-center rounded-xl font-mono text-[11px]"
             initial={{ backgroundColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)', scale: 0.8 }}
-            whileInView={{ backgroundColor: '#d4ff3f', color: '#0e0e0c', scale: 1 }}
+            whileInView={{ backgroundColor: '#0855d6', color: '#ffffff', scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 + i * 0.08, type: 'spring', stiffness: 300, damping: 18 }}
           >

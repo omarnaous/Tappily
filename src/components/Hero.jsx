@@ -83,7 +83,7 @@ export default function Hero() {
             transition={{ duration: 0.8, ease }}
             className="inline-flex items-center gap-2 rounded-full border border-line bg-card py-1 pl-1 pr-3.5 text-[13px] text-ink-2"
           >
-            <span className="rounded-full bg-lime px-2 py-0.5 font-mono text-[11px] font-semibold text-ink">NEW</span>
+            <span className="rounded-full bg-accent px-2 py-0.5 font-mono text-[11px] font-semibold text-white">NEW</span>
             Smart NFC tags for businesses in Lebanon
           </motion.div>
 
@@ -98,12 +98,12 @@ export default function Hero() {
             <span className="relative inline-block whitespace-nowrap">
               <motion.span
                 aria-hidden="true"
-                className="absolute inset-x-[-0.08em] bottom-[0.06em] top-[0.14em] -z-0 origin-left rounded-[0.18em] bg-lime"
+                className="absolute inset-x-[-0.08em] bottom-[0.06em] top-[0.14em] -z-0 origin-left rounded-[0.18em] bg-accent"
                 initial={{ scaleX: 0 }}
                 animate={{ scaleX: 1 }}
                 transition={{ duration: 0.9, delay: 0.55, ease }}
               />
-              <span className="relative">one tap</span>
+              <span className="relative text-white">one tap</span>
             </span>{' '}
             away.
           </motion.h1>
@@ -197,7 +197,7 @@ export default function Hero() {
                 </div>
                 <a
                   href="#shop"
-                  className="grid h-10 w-10 place-items-center rounded-full bg-lime text-ink transition-transform hover:scale-110"
+                  className="grid h-10 w-10 place-items-center rounded-full bg-accent text-white transition-transform hover:scale-110"
                   aria-label="Shop tags"
                 >
                   <ArrowRight className="h-4 w-4" />

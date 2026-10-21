@@ -22,7 +22,7 @@ export default function Statement() {
         <p className="h-display max-w-6xl text-[clamp(2rem,5.2vw,4.8rem)] !leading-[1.06] text-white">
           {words.map((w, i) => (
             <Word key={i} progress={scrollYProgress} range={[i / words.length, (i + 1) / words.length]}>
-              {w === 'tap.' ? <span className="rounded-[0.15em] bg-lime px-[0.12em] text-ink">{w}</span> : w}
+              {w === 'tap.' ? <span className="rounded-[0.15em] bg-accent px-[0.12em] text-white">{w}</span> : w}
             </Word>
           ))}
         </p>

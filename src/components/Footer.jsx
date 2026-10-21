@@ -12,20 +12,20 @@ export function FinalCTA() {
   const radius = useTransform(scrollYProgress, [0, 1], [80, 40])
   return (
     <section id="contact" ref={ref} className="scroll-mt-24 bg-paper px-3 pb-3 pt-10 sm:px-4 sm:pb-4">
-      <motion.div style={{ scale, borderRadius: radius }} className="relative isolate overflow-hidden bg-lime px-6 py-24 text-ink md:py-36">
+      <motion.div style={{ scale, borderRadius: radius }} className="relative isolate overflow-hidden bg-accent px-6 py-24 text-white md:py-36">
         <motion.div
-          className="pointer-events-none absolute -right-24 -top-24 -z-10 h-[34rem] w-[34rem] opacity-[0.07]"
+          className="pointer-events-none absolute -right-24 -top-24 -z-10 h-[34rem] w-[34rem] opacity-[0.1]"
           animate={{ rotate: 360 }}
           transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
         >
-          <LogoMark className="h-full w-full" base="#0e0e0c" accent="#0e0e0c" />
+          <LogoMark className="h-full w-full" base="#ffffff" accent="#ffffff" />
         </motion.div>
         <div className="mx-auto max-w-5xl text-center">
-          <p className="eyebrow !text-ink/60">Ready when you are</p>
+          <p className="eyebrow !text-white/70">Ready when you are</p>
           <h2 className="h-display mx-auto mt-5 text-[clamp(2.8rem,8.5vw,7.5rem)]">
             <SplitWords text="Get your business tapped." />
           </h2>
-          <p className="mx-auto mt-6 max-w-xl text-lg text-ink/70">Order in two minutes. We program, brand and deliver your tags anywhere in Lebanon.</p>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-white/80">Order in two minutes. We program, brand and deliver your tags anywhere in Lebanon.</p>
           <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
             <a href="#shop" className="btn-primary group !px-8 !py-4 text-base">
               Shop now <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
