@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, LayoutGroup, motion } from 'framer-motion'
 import { Plus } from 'lucide-react'
 import ProductVisual from './ProductVisual'
@@ -72,6 +72,16 @@ function ProductCard({ product, index, onOpen }) {
 export default function Shop() {
   const [cat, setCat] = useState('all')
   const [active, setActive] = useState(null)
+
+  // Other sections (e.g. the hero) open a product by firing `tapilly:open-product` with its id.
+  useEffect(() => {
+    const open = (e) => {
+      const p = products.find((x) => x.id === e.detail)
+      if (p) setActive(p)
+    }
+    window.addEventListener('tapilly:open-product', open)
+    return () => window.removeEventListener('tapilly:open-product', open)
+  }, [])
   const list = products.filter((p) => cat === 'all' || p.category === cat)
 
   return (
