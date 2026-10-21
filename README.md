@@ -10,7 +10,7 @@ Built with React 19, Vite, Tailwind CSS v4, Framer Motion and Lenis smooth scrol
 - Product collection with category filters, hover format swap, quick add and a product modal with Shopify-style bundle pricing (1 tag $25 · 2 tags −10% · 3+ tags −20%, applied across the whole cart)
 - Cart drawer with a free-delivery progress bar, persisted in `localStorage`
 - Checkout that sends a pre-filled order to Tapilly's WhatsApp (+961 76 693 639), so no payment backend is needed
-- "What one tap does": self-playing stat cards (count-ups, drawn line, ring, columns) — nothing to click
+- "How it works": four numbered steps (pick → we set up → place → customers tap) with a scroll-filled progress rail
 - Stacking "Every place people tap" cards with Remotion-rendered scenes, bento features, a scroll-highlighted statement, an industries carousel, Instagram feed, FAQ
 - Mobile sticky shop bar; respects `prefers-reduced-motion`
 

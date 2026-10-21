@@ -8,7 +8,7 @@ import { lockScroll, scrollToHash, unlockScroll } from '../lib/scrollLock'
 
 const links = [
   { href: '#shop', label: 'Shop' },
-  { href: '#benefits', label: 'Impact' },
+  { href: '#how', label: 'How it works' },
   { href: '#faq', label: 'FAQ' },
 ]
 

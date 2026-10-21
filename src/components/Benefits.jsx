@@ -1,196 +1,83 @@
-// "What one tap does": a wall of self-playing stats. Everything animates on its own when it scrolls
-// into view; nothing to click. Review/follower numbers are illustrative and labelled as such.
-import { useEffect, useRef, useState } from 'react'
-import { animate, motion, useInView } from 'framer-motion'
-import { Reveal, SectionHeading } from './Reveal'
+// "How it works": four numbered steps from order to first tap. A line fills as you scroll through them.
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
+import { MapPin, RefreshCw, Settings2, ShoppingBag } from 'lucide-react'
+import { NfcWaves } from './Brand'
+import { SectionHeading } from './Reveal'
 
 const ease = [0.16, 1, 0.3, 1]
 
-/** Counts from `from` to `to` once the element is in view. */
-function Count({ from = 0, to, duration = 1.6, delay = 0, format = (v) => Math.round(v).toString() }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-15% 0px' })
-  const [v, setV] = useState(from)
-  useEffect(() => {
-    if (!inView) return
-    const c = animate(from, to, { duration, delay, ease, onUpdate: setV })
-    return () => c.stop()
-  }, [inView, from, to, duration, delay])
-  return <span ref={ref}>{format(v)}</span>
-}
+const STEPS = [
+  { icon: ShoppingBag, title: 'Pick your tags', text: 'Choose the platforms — Google reviews, Instagram, WhatsApp, menu — as a stand or a card.' },
+  { icon: Settings2, title: 'We set them up', text: 'We program each tag with your link, add your business name and deliver anywhere in Lebanon.' },
+  { icon: MapPin, title: 'Place them', text: 'On the counter, the tables or the wall — wherever customers wait, pay or sit.' },
+  { icon: null, title: 'Customers tap', text: 'Their phone opens your page in about a second. No app, no QR code, no typing.', accent: true },
+]
 
-const Card = ({ className = '', children, delay = 0 }) => (
-  <Reveal delay={delay} className={`relative flex flex-col overflow-hidden rounded-[28px] p-6 md:p-8 ${className}`}>
-    {children}
-  </Reveal>
-)
-
-const Label = ({ children, dark }) => (
-  <p className={`font-mono text-[11.5px] uppercase tracking-[0.14em] ${dark ? 'text-white/50' : 'text-ink/50'}`}>{children}</p>
-)
-
-/* A — 6 steps collapse to 1 tap */
-function StepsCard() {
-  const rows = [
-    { label: 'Search your name', v: 6 },
-    { label: 'Scan a QR code', v: 4 },
-    { label: 'Tap a Tapilly tag', v: 1, us: true },
-  ]
+function Step({ step, i }) {
+  const Icon = step.icon
   return (
-    <Card className="bg-ink text-white">
-      <Label dark>Steps to reach you</Label>
-      <p className="mt-3 text-[88px] font-semibold leading-none tracking-[-0.05em] text-accent-light md:text-[112px]">
-        <Count from={6} to={1} duration={1.8} delay={0.3} />
-        <span className="ml-3 align-middle text-2xl font-medium tracking-tight text-white/60 md:text-3xl">tap</span>
-      </p>
-      <p className="mt-3 max-w-sm text-[15px] text-white/60">Searching or scanning loses customers on the way. A tap takes them straight to you.</p>
-      <ul className="mt-auto space-y-4 pt-10">
-        {rows.map((r, i) => (
-          <li key={r.label}>
-            <div className="flex justify-between text-sm">
-              <span className={r.us ? 'font-semibold' : 'text-white/60'}>{r.label}</span>
-              <span className="font-mono text-white/60">{r.v}</span>
-            </div>
-            <div className="mt-2 h-3">
-              <motion.div
-                className={`h-full rounded-r-[4px] ${r.us ? 'bg-accent-light shadow-[0_0_24px_rgba(91,149,255,0.7)]' : 'bg-white/15'}`}
-                initial={{ width: 0 }}
-                whileInView={{ width: `${(r.v / 6) * 100}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.1, delay: 0.2 + i * 0.15, ease }}
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </Card>
-  )
-}
-
-/* C — time to open */
-function SpeedCard() {
-  const r = 52
-  const c = 2 * Math.PI * r
-  return (
-    <Card className="bg-card ring-1 ring-line" delay={0.05}>
-      <Label>Speed</Label>
-      <div className="relative mt-6 grid h-24 w-24 place-items-center">
-        <svg viewBox="0 0 128 128" className="absolute inset-0 -rotate-90">
-          <circle cx="64" cy="64" r={r} fill="none" stroke="var(--color-mist)" strokeWidth="10" />
-          <motion.circle
-            cx="64"
-            cy="64"
-            r={r}
-            fill="none"
-            stroke="var(--color-series-1)"
-            strokeWidth="10"
-            strokeLinecap="round"
-            strokeDasharray={c}
-            initial={{ strokeDashoffset: c }}
-            whileInView={{ strokeDashoffset: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1, delay: 0.4, ease: 'easeInOut' }}
-          />
-        </svg>
-        <p className="text-2xl font-semibold tracking-tight">~1s</p>
+    <motion.li
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-80px' }}
+      transition={{ duration: 0.9, delay: i * 0.12, ease }}
+      className={`relative flex flex-col rounded-[28px] p-6 md:p-7 ${step.accent ? 'bg-accent text-white' : 'border border-line bg-card'}`}
+    >
+      <div className="flex items-start justify-between">
+        <motion.span
+          className={`relative grid h-14 w-14 place-items-center rounded-2xl ${step.accent ? 'bg-white/15' : 'bg-mist'}`}
+          initial={{ scale: 0.5, rotate: -20 }}
+          whileInView={{ scale: 1, rotate: 0 }}
+          viewport={{ once: true }}
+          transition={{ type: 'spring', stiffness: 260, damping: 14, delay: 0.2 + i * 0.12 }}
+        >
+          {Icon ? <Icon className="h-6 w-6" strokeWidth={1.8} /> : <NfcWaves className="h-7 w-7" />}
+          {step.accent && (
+            <motion.span
+              className="pointer-events-none absolute inset-0 rounded-2xl border-2 border-white/60"
+              animate={{ scale: [1, 1.6], opacity: [0.8, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeOut' }}
+            />
+          )}
+        </motion.span>
+        <span className={`font-mono text-[44px] font-medium leading-none tracking-tight ${step.accent ? 'text-white/40' : 'text-ink/15'}`}>0{i + 1}</span>
       </div>
-      <p className="mt-auto pt-6 text-xl font-semibold tracking-tight">Opens in a second</p>
-      <p className="mt-1 text-[15px] text-muted">No app, no camera, no typing.</p>
-    </Card>
-  )
-}
-
-/* D — pay once, every month after is free */
-function OnceCard() {
-  const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
-  return (
-    <Card className="bg-ink text-white" delay={0.1}>
-      <Label dark>Cost</Label>
-      <p className="mt-3 text-[64px] font-semibold leading-none tracking-[-0.05em] text-accent-light">$0</p>
-      <div className="mt-5 grid grid-cols-6 gap-1.5">
-        {months.map((m, i) => (
-          <motion.div
-            key={i}
-            className="grid aspect-square place-items-center rounded-lg font-mono text-[10px]"
-            initial={{ backgroundColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)', scale: 0.8 }}
-            whileInView={{ backgroundColor: '#0855d6', color: '#ffffff', scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 + i * 0.08, type: 'spring', stiffness: 300, damping: 18 }}
-          >
-            {m}
-          </motion.div>
-        ))}
-      </div>
-      <p className="mt-auto pt-6 text-xl font-semibold tracking-tight">No monthly fees</p>
-      <p className="mt-1 text-[15px] text-white/60">Pay once. It works all year.</p>
-    </Card>
-  )
-}
-
-/* E — works on every modern phone */
-function PhonesCard() {
-  return (
-    <Card className="bg-card ring-1 ring-line" delay={0.15}>
-      <Label>Works on</Label>
-      <div className="mt-6 flex items-end gap-3">
-        {['iPhone', 'Android'].map((t, i) => (
-          <motion.div
-            key={t}
-            className="grid h-24 w-14 place-items-end justify-center rounded-[14px] border-2 border-ink pb-2"
-            initial={{ y: 30, opacity: 0, rotate: i ? 8 : -8 }}
-            whileInView={{ y: 0, opacity: 1, rotate: i ? 6 : -6 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', stiffness: 220, damping: 14, delay: 0.3 + i * 0.12 }}
-          >
-            <span className="h-1 w-5 rounded-full bg-ink/40" />
-          </motion.div>
-        ))}
-      </div>
-      <p className="mt-auto pt-6 text-xl font-semibold tracking-tight">iPhone & Android</p>
-      <p className="mt-1 text-[15px] text-muted">NFC is built in. Nothing to install.</p>
-    </Card>
-  )
-}
-
-/* F — change where the tag points, free */
-function ReprogramCard() {
-  return (
-    <Card className="bg-accent text-white" delay={0.2}>
-      <Label dark>Change the link</Label>
-      <motion.div
-        className="mt-6 grid h-16 w-16 place-items-center rounded-full bg-white/15"
-        initial={{ rotate: -180, scale: 0.6 }}
-        whileInView={{ rotate: 0, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, ease }}
-      >
-        <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M3 12a9 9 0 0 1 15.5-6.2L21 8" />
-          <path d="M21 3v5h-5" />
-          <path d="M21 12a9 9 0 0 1-15.5 6.2L3 16" />
-          <path d="M3 21v-5h5" />
-        </svg>
-      </motion.div>
-      <p className="mt-auto pt-6 text-xl font-semibold tracking-tight">Anytime, for free</p>
-      <p className="mt-1 text-[15px] text-white/75">New menu or new page? We reprogram it.</p>
-    </Card>
+      <h3 className="mt-10 text-2xl font-semibold tracking-tight">{step.title}</h3>
+      <p className={`mt-2 text-[15px] leading-relaxed ${step.accent ? 'text-white/80' : 'text-muted'}`}>{step.text}</p>
+    </motion.li>
   )
 }
 
 export default function Benefits() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.85', 'end 0.6'] })
+  const fill = useTransform(scrollYProgress, [0, 1], ['0%', '100%'])
+
   return (
-    <section id="benefits" className="scroll-mt-24 bg-paper py-24 md:py-32">
+    <section id="how" className="scroll-mt-24 bg-paper py-24 md:py-32">
       <div className="container-x">
-        <SectionHeading eyebrow="Why it works" title="Less effort for them. More for you." />
-        <div className="mt-12 grid gap-4 lg:grid-cols-2">
-          <StepsCard />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <SpeedCard />
-            <OnceCard />
-            <PhonesCard />
-            <ReprogramCard />
+        <SectionHeading eyebrow="How it works" title="Live in four simple steps." />
+        <div ref={ref} className="relative mt-12">
+          {/* progress rail behind the cards (desktop) */}
+          <div className="absolute left-0 right-0 top-[52px] hidden h-[2px] bg-line lg:block">
+            <motion.div className="h-full bg-accent" style={{ width: fill }} />
           </div>
+          <ol className="relative grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {STEPS.map((s, i) => (
+              <Step key={s.title} step={s} i={i} />
+            ))}
+          </ol>
         </div>
+        <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.6 }}
+          className="mt-6 flex items-center gap-2 text-[15px] text-muted"
+        >
+          <RefreshCw className="h-4 w-4 text-accent" /> Changed your menu or page? We reprogram your tags for free.
+        </motion.p>
       </div>
     </section>
   )

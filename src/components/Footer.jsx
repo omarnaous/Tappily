@@ -65,8 +65,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a className="hover:text-white" href="#benefits">
-                  Impact
+                <a className="hover:text-white" href="#how">
+                  How it works
                 </a>
               </li>
             </ul>
