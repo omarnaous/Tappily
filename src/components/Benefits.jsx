@@ -37,13 +37,14 @@ function StepsCard() {
     { label: 'Tap a Tapilly tag', v: 1, us: true },
   ]
   return (
-    <Card className="bg-ink text-white lg:col-span-3">
+    <Card className="bg-ink text-white">
       <Label dark>Steps to reach you</Label>
       <p className="mt-3 text-[88px] font-semibold leading-none tracking-[-0.05em] text-accent-light md:text-[112px]">
         <Count from={6} to={1} duration={1.8} delay={0.3} />
         <span className="ml-3 align-middle text-2xl font-medium tracking-tight text-white/60 md:text-3xl">tap</span>
       </p>
-      <ul className="mt-8 space-y-4">
+      <p className="mt-3 max-w-sm text-[15px] text-white/60">Searching or scanning loses customers on the way. A tap takes them straight to you.</p>
+      <ul className="mt-auto space-y-4 pt-10">
         {rows.map((r, i) => (
           <li key={r.label}>
             <div className="flex justify-between text-sm">
@@ -66,93 +67,14 @@ function StepsCard() {
   )
 }
 
-/* B — reviews jump after the tag goes on the counter (illustrative) */
-function ReviewsCard() {
-  const data = [6, 7, 6, 8, 7, 24, 33, 41, 46]
-  const added = 5
-  const W = 520
-  const H = 190
-  const max = 50
-  const x = (i) => 8 + (i / (data.length - 1)) * (W - 16)
-  const y = (v) => H - 6 - (v / max) * (H - 24)
-  const line = data.map((v, i) => `${i ? 'L' : 'M'}${x(i)},${y(v)}`).join(' ')
-  const area = `${line} L${x(data.length - 1)},${H} L${x(0)},${H} Z`
-  const last = data.length - 1
-  return (
-    <Card className="bg-accent text-white lg:col-span-3" delay={0.08}>
-      <Label>Google reviews per month</Label>
-      <p className="mt-3 text-[88px] font-semibold leading-none tracking-[-0.05em] md:text-[112px]">
-        +<Count to={46} delay={0.6} />
-      </p>
-      <div className="relative mt-auto pt-6">
-        <svg
-          viewBox={`0 0 ${W} ${H}`}
-          className="w-full overflow-visible"
-          role="img"
-          aria-label="Reviews per month rise from about 7 to 46 after the tag is added"
-        >
-          <line x1="0" x2={W} y1={H} y2={H} stroke="rgba(255,255,255,0.3)" strokeWidth="1" />
-          <line x1={x(added)} x2={x(added)} y1="0" y2={H} stroke="rgba(255,255,255,0.45)" strokeWidth="1" />
-          <text x={x(added) + 8} y="14" className="fill-white font-mono text-[12px]">
-            tag added
-          </text>
-          <motion.path
-            d={area}
-            fill="#ffffff"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 0.1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 1.4 }}
-          />
-          <motion.path
-            d={line}
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            initial={{ pathLength: 0 }}
-            whileInView={{ pathLength: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1.8, delay: 0.3, ease: 'easeInOut' }}
-          />
-          <motion.circle
-            cx={x(last)}
-            cy={y(data[last])}
-            r="14"
-            fill="#ffffff"
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: [1, 1.8, 1], opacity: [0.25, 0, 0.25] }}
-            transition={{ duration: 2, repeat: Infinity, delay: 2.2 }}
-            style={{ transformOrigin: `${x(last)}px ${y(data[last])}px` }}
-          />
-          <motion.circle
-            cx={x(last)}
-            cy={y(data[last])}
-            r="6"
-            fill="#ffffff"
-            stroke="#0855d6"
-            strokeWidth="2"
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ type: 'spring', delay: 2.1 }}
-            style={{ transformOrigin: `${x(last)}px ${y(data[last])}px` }}
-          />
-        </svg>
-      </div>
-    </Card>
-  )
-}
-
 /* C — time to open */
 function SpeedCard() {
   const r = 52
   const c = 2 * Math.PI * r
   return (
-    <Card className="items-center bg-card text-center ring-1 ring-line lg:col-span-2" delay={0.05}>
-      <Label>Tap to open</Label>
-      <div className="relative mt-6 grid h-40 w-40 place-items-center">
+    <Card className="bg-card ring-1 ring-line" delay={0.05}>
+      <Label>Speed</Label>
+      <div className="relative mt-6 grid h-24 w-24 place-items-center">
         <svg viewBox="0 0 128 128" className="absolute inset-0 -rotate-90">
           <circle cx="64" cy="64" r={r} fill="none" stroke="var(--color-mist)" strokeWidth="10" />
           <motion.circle
@@ -170,9 +92,10 @@ function SpeedCard() {
             transition={{ duration: 1, delay: 0.4, ease: 'easeInOut' }}
           />
         </svg>
-        <p className="text-5xl font-semibold tracking-tight">~1s</p>
+        <p className="text-2xl font-semibold tracking-tight">~1s</p>
       </div>
-      <p className="mt-6 text-[15px] text-muted">No app. No camera. Just tap.</p>
+      <p className="mt-auto pt-6 text-xl font-semibold tracking-tight">Opens in a second</p>
+      <p className="mt-1 text-[15px] text-muted">No app, no camera, no typing.</p>
     </Card>
   )
 }
@@ -181,14 +104,14 @@ function SpeedCard() {
 function OnceCard() {
   const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D']
   return (
-    <Card className="bg-ink text-white lg:col-span-2" delay={0.1}>
-      <Label dark>Monthly fees</Label>
-      <p className="mt-3 text-[80px] font-semibold leading-none tracking-[-0.05em] text-accent-light">$0</p>
-      <div className="mt-auto grid grid-cols-6 gap-2 pt-8">
+    <Card className="bg-ink text-white" delay={0.1}>
+      <Label dark>Cost</Label>
+      <p className="mt-3 text-[64px] font-semibold leading-none tracking-[-0.05em] text-accent-light">$0</p>
+      <div className="mt-5 grid grid-cols-6 gap-1.5">
         {months.map((m, i) => (
           <motion.div
             key={i}
-            className="grid aspect-square place-items-center rounded-xl font-mono text-[11px]"
+            className="grid aspect-square place-items-center rounded-lg font-mono text-[10px]"
             initial={{ backgroundColor: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)', scale: 0.8 }}
             whileInView={{ backgroundColor: '#0855d6', color: '#ffffff', scale: 1 }}
             viewport={{ once: true }}
@@ -198,35 +121,58 @@ function OnceCard() {
           </motion.div>
         ))}
       </div>
-      <p className="mt-4 text-[15px] text-white/60">Pay once. Works all year.</p>
+      <p className="mt-auto pt-6 text-xl font-semibold tracking-tight">No monthly fees</p>
+      <p className="mt-1 text-[15px] text-white/60">Pay once. It works all year.</p>
     </Card>
   )
 }
 
-/* E — followers per week (illustrative) */
-function FollowersCard() {
-  const data = [22, 28, 25, 41, 52, 61, 89]
-  const max = 90
+/* E — works on every modern phone */
+function PhonesCard() {
   return (
-    <Card className="bg-card ring-1 ring-line lg:col-span-2" delay={0.15}>
-      <Label>New Instagram followers</Label>
-      <p className="mt-3 text-[80px] font-semibold leading-none tracking-[-0.05em]">
-        +<Count to={318} delay={0.4} />
-      </p>
-      <div className="mt-auto flex h-36 items-end gap-2 pt-8">
-        {data.map((v, i) => (
+    <Card className="bg-card ring-1 ring-line" delay={0.15}>
+      <Label>Works on</Label>
+      <div className="mt-6 flex items-end gap-3">
+        {['iPhone', 'Android'].map((t, i) => (
           <motion.div
-            key={i}
-            className="flex-1 rounded-t-[6px]"
-            style={{ background: i === data.length - 1 ? 'var(--color-series-1)' : 'var(--color-de-emphasis)', transformOrigin: 'bottom' }}
-            initial={{ height: 0 }}
-            whileInView={{ height: `${(v / max) * 100}%` }}
+            key={t}
+            className="grid h-24 w-14 place-items-end justify-center rounded-[14px] border-2 border-ink pb-2"
+            initial={{ y: 30, opacity: 0, rotate: i ? 8 : -8 }}
+            whileInView={{ y: 0, opacity: 1, rotate: i ? 6 : -6 }}
             viewport={{ once: true }}
-            transition={{ delay: 0.3 + i * 0.09, type: 'spring', stiffness: 140, damping: 14 }}
-          />
+            transition={{ type: 'spring', stiffness: 220, damping: 14, delay: 0.3 + i * 0.12 }}
+          >
+            <span className="h-1 w-5 rounded-full bg-ink/40" />
+          </motion.div>
         ))}
       </div>
-      <p className="mt-4 text-[15px] text-muted">This month, from one tag at the till.</p>
+      <p className="mt-auto pt-6 text-xl font-semibold tracking-tight">iPhone & Android</p>
+      <p className="mt-1 text-[15px] text-muted">NFC is built in. Nothing to install.</p>
+    </Card>
+  )
+}
+
+/* F — change where the tag points, free */
+function ReprogramCard() {
+  return (
+    <Card className="bg-accent text-white" delay={0.2}>
+      <Label dark>Change the link</Label>
+      <motion.div
+        className="mt-6 grid h-16 w-16 place-items-center rounded-full bg-white/15"
+        initial={{ rotate: -180, scale: 0.6 }}
+        whileInView={{ rotate: 0, scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease }}
+      >
+        <svg viewBox="0 0 24 24" className="h-8 w-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3 12a9 9 0 0 1 15.5-6.2L21 8" />
+          <path d="M21 3v5h-5" />
+          <path d="M21 12a9 9 0 0 1-15.5 6.2L3 16" />
+          <path d="M3 21v-5h5" />
+        </svg>
+      </motion.div>
+      <p className="mt-auto pt-6 text-xl font-semibold tracking-tight">Anytime, for free</p>
+      <p className="mt-1 text-[15px] text-white/75">New menu or new page? We reprogram it.</p>
     </Card>
   )
 }
@@ -235,15 +181,16 @@ export default function Benefits() {
   return (
     <section id="benefits" className="scroll-mt-24 bg-paper py-24 md:py-32">
       <div className="container-x">
-        <SectionHeading eyebrow="The impact" title="What one tap does." />
-        <div className="mt-12 grid gap-4 lg:grid-cols-6">
+        <SectionHeading eyebrow="Why it works" title="Less effort for them. More for you." />
+        <div className="mt-12 grid gap-4 lg:grid-cols-2">
           <StepsCard />
-          <ReviewsCard />
-          <SpeedCard />
-          <OnceCard />
-          <FollowersCard />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <SpeedCard />
+            <OnceCard />
+            <PhonesCard />
+            <ReprogramCard />
+          </div>
         </div>
-        <p className="mt-5 font-mono text-[11px] text-muted">Review and follower figures are illustrative, for a sample café.</p>
       </div>
     </section>
   )
