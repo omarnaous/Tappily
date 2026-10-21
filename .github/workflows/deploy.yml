@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  pages: write
 
 concurrency:
   group: pages
@@ -30,3 +31,10 @@ jobs:
           publish_dir: ./dist
           publish_branch: gh-pages
           force_orphan: true
+      # Pushes made with GITHUB_TOKEN don't start a Pages build on their own, so request one.
+      - name: Request a GitHub Pages build
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/${{ github.repository }}/pages/builds
