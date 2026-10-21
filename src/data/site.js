@@ -13,7 +13,20 @@ export const contact = {
 
 export const whatsappLink = (text = '') => `https://wa.me/${contact.phoneIntl}${text ? `?text=${encodeURIComponent(text)}` : ''}`
 
-export const PRICE = 25
+export const PRICE = 25 // one tag, full price
+
+// Shopify-style quantity breaks. They count every tag in the cart (mix any platforms).
+export const BUNDLES = [
+  { qty: 1, unit: 25, title: '1 tag', note: 'Try it on your counter' },
+  { qty: 2, unit: 22.5, title: '2 tags', note: 'Reviews + social', save: 10, badge: 'Popular' },
+  { qty: 3, unit: 20, title: '3 tags', note: 'Every table covered', save: 20, badge: 'Best value' },
+]
+export const MAX_SAVE = 20
+
+/** Price per tag for a cart holding `count` tags (3+ tags get the best break). */
+export const unitPriceFor = (count) => [...BUNDLES].reverse().find((b) => count >= b.qty)?.unit ?? PRICE
+
+export const money = (n) => `${CURRENCY}${Number.isInteger(n) ? n : n.toFixed(2)}`
 export const CURRENCY = '$'
 export const FREE_DELIVERY_FROM = 3 // tags per order
 
@@ -126,31 +139,6 @@ export const products = [
   },
 ]
 
-export const pricing = [
-  {
-    id: 'single',
-    name: 'Single',
-    tags: 1,
-    blurb: 'Try it on your counter.',
-    features: ['1 programmed NFC tag', 'Choose any platform', 'Stand or card format', 'Free reprogramming'],
-  },
-  {
-    id: 'starter',
-    name: 'Starter',
-    tags: 3,
-    blurb: 'Reviews + social, covered.',
-    popular: true,
-    features: ['3 programmed NFC tags', 'Mix any platforms', 'Free delivery in Lebanon', 'Custom business name', 'Free reprogramming'],
-  },
-  {
-    id: 'business',
-    name: 'Business',
-    tags: 6,
-    blurb: 'Every table, every counter.',
-    features: ['6 programmed NFC tags', 'Mix any platforms', 'Free delivery in Lebanon', 'Your logo & brand colors', 'Priority setup', 'Free reprogramming'],
-  },
-]
-
 export const steps = [
   { n: '01', title: 'Tap', text: 'Your customer holds their phone near the Tapilly tag. No app, no camera, no typing.' },
   { n: '02', title: 'Connect', text: 'Their phone instantly opens your Google review, Instagram, menu, WhatsApp or payment page.' },
@@ -220,7 +208,7 @@ export const faqs = [
   },
   {
     q: 'How much does it cost?',
-    a: 'Every Tapilly tag is $25 — programmed, ready to use, and with your business name on it. No subscriptions and no monthly fees.',
+    a: 'One tag is $25. Buy 2 and save 10% ($22.50 each), buy 3 or more and save 20% ($20 each) — mix any platforms. Every tag is programmed, ready to use and carries your business name. No subscriptions, no monthly fees.',
   },
   {
     q: 'How do I order and pay?',

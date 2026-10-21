@@ -9,13 +9,12 @@ import { lockScroll, scrollToHash, unlockScroll } from '../lib/scrollLock'
 const links = [
   { href: '#shop', label: 'Shop' },
   { href: '#benefits', label: 'Impact' },
-  { href: '#pricing', label: 'Pricing' },
   { href: '#faq', label: 'FAQ' },
 ]
 
 const notes = [
   `Free delivery across Lebanon on ${FREE_DELIVERY_FROM}+ tags`,
-  'Every tag $25 — no subscriptions',
+  'Bundle & save — 10% off 2 tags, 20% off 3+',
   'Programmed & ready to tap',
   'Works on iPhone & Android',
   'Free reprogramming, forever',

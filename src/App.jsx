@@ -10,7 +10,6 @@ import Shop from './components/Shop'
 import Benefits from './components/Benefits'
 import Statement from './components/Statement'
 import Industries from './components/Industries'
-import Pricing from './components/Pricing'
 import InstagramFeed from './components/InstagramFeed'
 import FAQ from './components/FAQ'
 import Footer, { FinalCTA } from './components/Footer'
@@ -56,7 +55,6 @@ export default function App() {
           <Benefits />
           <Statement />
           <Industries />
-          <Pricing />
           <InstagramFeed />
           <FAQ />
           <FinalCTA />

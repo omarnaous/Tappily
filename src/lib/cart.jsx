@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { PRICE, products } from '../data/site'
+import { PRICE, products, unitPriceFor } from '../data/site'
 
 const CartContext = createContext(null)
 const KEY = 'tapilly-cart-v1'
@@ -46,7 +46,10 @@ export function CartProvider({ children }) {
 
   const value = useMemo(() => {
     const count = lines.reduce((s, l) => s + l.qty, 0)
-    return { lines, count, subtotal: count * PRICE, add, setQty, clear, open, setOpen, toast, setToast }
+    const unit = unitPriceFor(count)
+    const subtotal = count * PRICE // before quantity breaks
+    const total = count * unit
+    return { lines, count, unit, subtotal, total, discount: subtotal - total, add, setQty, clear, open, setOpen, toast, setToast }
   }, [lines, add, setQty, clear, open, toast])
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>

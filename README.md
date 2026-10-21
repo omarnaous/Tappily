@@ -7,16 +7,16 @@ Built with React 19, Vite, Tailwind CSS v4, Framer Motion and Lenis smooth scrol
 ## Features
 
 - Hero with a seamless 12 s product film: a phone taps the stand and opens Google Reviews, Instagram, WhatsApp and a menu, each tap flooding the frame with that channel's colour
-- Product collection with category filters, hover format swap, quick add and a product modal (stand / card format, quantity)
+- Product collection with category filters, hover format swap, quick add and a product modal with Shopify-style bundle pricing (1 tag $25 · 2 tags −10% · 3+ tags −20%, applied across the whole cart)
 - Cart drawer with a free-delivery progress bar, persisted in `localStorage`
 - Checkout that sends a pre-filled order to Tapilly's WhatsApp (+961 76 693 639), so no payment backend is needed
-- "The impact" dashboard: an interactive growth estimator with live charts, a friction comparison and cost-per-result tile
-- Stacking "Every place people tap" cards with Remotion-rendered scenes, bento features, a scroll-highlighted statement, an industries carousel, pricing packs, Instagram feed, FAQ
+- "What one tap does": self-playing stat cards (count-ups, drawn line, ring, columns) — nothing to click
+- Stacking "Every place people tap" cards with Remotion-rendered scenes, bento features, a scroll-highlighted statement, an industries carousel, Instagram feed, FAQ
 - Mobile sticky shop bar; respects `prefers-reduced-motion`
 
 ## Editing content
 
-All store content lives in [`src/data/site.js`](src/data/site.js): price, products, packs, FAQ, contact details, and the free-delivery threshold.
+All store content lives in [`src/data/site.js`](src/data/site.js): price and bundle breaks (`BUNDLES`), products, FAQ, contact details, and the free-delivery threshold.
 
 ## Development
 

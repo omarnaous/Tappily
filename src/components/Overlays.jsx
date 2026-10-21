@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { Check, ShoppingBag } from 'lucide-react'
 import { useCart } from '../lib/cart'
-import { CURRENCY, PRICE, products } from '../data/site'
+import { MAX_SAVE, money, products } from '../data/site'
 
 export function CartToast() {
   const { toast, setToast, setOpen } = useCart()
@@ -42,7 +42,7 @@ export function CartToast() {
 
 /** Sticky mobile shop bar that appears after the hero. */
 export function MobileBar() {
-  const { count, subtotal, setOpen } = useCart()
+  const { count, total, setOpen } = useCart()
   const { scrollY } = useScroll()
   const [show, setShow] = useState(false)
   useMotionValueEvent(scrollY, 'change', (y) => setShow(y > window.innerHeight * 0.8))
@@ -65,18 +65,12 @@ export function MobileBar() {
                 <span className="flex items-center gap-2">
                   <ShoppingBag className="h-4 w-4" /> View cart ({count})
                 </span>
-                <span>
-                  {CURRENCY}
-                  {subtotal}
-                </span>
+                <span>{money(total)}</span>
               </button>
             ) : (
               <a href="#shop" className="flex flex-1 items-center justify-between rounded-full bg-lime px-5 py-3 text-sm font-semibold text-ink">
                 <span>Shop NFC tags</span>
-                <span>
-                  from {CURRENCY}
-                  {PRICE}
-                </span>
+                <span>Save up to {MAX_SAVE}%</span>
               </a>
             )}
           </div>

@@ -6,7 +6,7 @@ import { PlatformIcon } from './Brand'
 import { SectionHeading } from './Reveal'
 import ProductModal from './ProductModal'
 import { useCart } from '../lib/cart'
-import { categories, CURRENCY, PRICE, products } from '../data/site'
+import { categories, CURRENCY, MAX_SAVE, money, PRICE, products } from '../data/site'
 
 const CATEGORY_LABEL = { reviews: 'Reviews', social: 'Social', ordering: 'Menu & ordering', payments: 'Payments' }
 
@@ -51,10 +51,9 @@ function ProductCard({ product, index, onOpen }) {
         </h3>
         <p className="mt-1 hidden text-[13.5px] leading-snug text-muted sm:block">{product.short}</p>
         <div className="mt-auto flex items-center justify-between gap-2 pt-4">
-          <p className="text-[15px] font-semibold sm:text-[17px]">
-            {CURRENCY}
-            {PRICE}
-            <span className="font-normal text-muted">.00</span>
+          <p className="text-[15px] font-semibold leading-tight sm:text-[17px]">
+            {money(PRICE)}
+            <span className="block font-mono text-[10.5px] font-medium text-brand">Save {MAX_SAVE}% on 3+</span>
           </p>
           <button
             onClick={() => add(product.id, 'stand')}
@@ -82,7 +81,7 @@ export default function Shop() {
           <SectionHeading
             eyebrow="The collection"
             title="Pick your tap."
-            text={`Every Tapilly tag is ${CURRENCY}${PRICE} — programmed with your link, branded with your name, delivered ready to use.`}
+            text={`${CURRENCY}${PRICE} a tag, or save up to ${MAX_SAVE}% when you bundle. Programmed with your link, branded with your name, delivered ready to use.`}
           />
           <LayoutGroup>
             <div className="no-scrollbar flex max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-card p-1" role="tablist">

@@ -65,11 +65,6 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a className="hover:text-white" href="#pricing">
-                  Pricing
-                </a>
-              </li>
-              <li>
                 <a className="hover:text-white" href="#benefits">
                   Impact
                 </a>

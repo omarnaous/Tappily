@@ -5,20 +5,20 @@ import ProductVisual from './ProductVisual'
 import { PlatformIcon } from './Brand'
 import { useCart } from '../lib/cart'
 import { lockScroll, unlockScroll } from '../lib/scrollLock'
-import { CURRENCY, formats, FREE_DELIVERY_FROM, PRICE, products, whatsappLink } from '../data/site'
+import { BUNDLES, formats, FREE_DELIVERY_FROM, MAX_SAVE, money, PRICE, products, whatsappLink } from '../data/site'
 
 const byId = Object.fromEntries(products.map((p) => [p.id, p]))
 const formatLabel = Object.fromEntries(formats.map((f) => [f.id, f.label]))
 
-function buildOrderMessage(lines, count, subtotal, form) {
-  const items = lines.map((l) => `• ${l.qty} × ${byId[l.productId].name} (${formatLabel[l.format]}) — ${CURRENCY}${l.qty * PRICE}`).join('\n')
+function buildOrderMessage({ lines, count, unit, total, discount }, form) {
+  const items = lines.map((l) => `• ${l.qty} × ${byId[l.productId].name} (${formatLabel[l.format]}) — ${money(l.qty * unit)}`).join('\n')
   const delivery = count >= FREE_DELIVERY_FROM ? 'Free delivery' : 'Delivery fee to confirm'
   return [
     'Hi Tapilly! I would like to place an order:',
     '',
     items,
     '',
-    `Total: ${count} tag${count > 1 ? 's' : ''} — ${CURRENCY}${subtotal} (${delivery})`,
+    `Total: ${count} tag${count > 1 ? 's' : ''} — ${money(total)}${discount ? ` (saved ${money(discount)})` : ''} · ${delivery}`,
     '',
     `Name: ${form.name}`,
     `Business: ${form.business}`,
@@ -67,13 +67,15 @@ export default function CartDrawer() {
 
 // Mounted fresh on every open, so the checkout step always starts at the cart.
 function Drawer({ form, setForm }) {
-  const { lines, count, subtotal, setQty, setOpen, clear } = useCart()
+  const cart = useCart()
+  const { lines, count, unit, subtotal, total, discount, setQty, setOpen, clear } = cart
+  const nextBreak = BUNDLES.find((b) => b.qty > count)
   const [step, setStep] = useState('cart')
   const remaining = Math.max(0, FREE_DELIVERY_FROM - count)
 
   const submit = (e) => {
     e.preventDefault()
-    window.open(whatsappLink(buildOrderMessage(lines, count, subtotal, form)), '_blank', 'noopener')
+    window.open(whatsappLink(buildOrderMessage(cart, form)), '_blank', 'noopener')
     setStep('done')
     clear()
   }
@@ -142,8 +144,7 @@ function Drawer({ form, setForm }) {
             </div>
             <h3 className="h-display mt-6 text-3xl">Your cart is empty</h3>
             <p className="mt-3 text-muted">
-              Every Tapilly tag is {CURRENCY}
-              {PRICE}. Pick the platform that grows your business.
+              {money(PRICE)} a tag — save up to {MAX_SAVE}% when you bundle. Pick the platforms that grow your business.
             </p>
             <a href="#shop" className="btn-primary mt-8" onClick={() => setOpen(false)}>
               Shop NFC tags
@@ -154,13 +155,14 @@ function Drawer({ form, setForm }) {
             <div className="border-b border-line px-6 py-4">
               <p className="flex items-center gap-2 text-sm">
                 <Truck className="h-4 w-4 text-ink" />
-                {remaining > 0 ? (
+                {nextBreak ? (
                   <span>
-                    Add <b>{remaining}</b> more tag{remaining > 1 ? 's' : ''} for <b>free delivery</b>
+                    Add <b>{nextBreak.qty - count}</b> more tag{nextBreak.qty - count > 1 ? 's' : ''} to <b>save {nextBreak.save}%</b>
+                    {nextBreak.qty >= FREE_DELIVERY_FROM && ' + free delivery'}
                   </span>
                 ) : (
                   <span>
-                    You've unlocked <b>free delivery</b> 🎉
+                    You're saving <b>{MAX_SAVE}%</b> with <b>free delivery</b> 🎉
                   </span>
                 )}
               </p>
@@ -194,9 +196,9 @@ function Drawer({ form, setForm }) {
                             <p className="font-semibold leading-tight">{p.name}</p>
                             <p className="mt-0.5 text-sm text-muted">{formatLabel[l.format]}</p>
                           </div>
-                          <p className="font-semibold">
-                            {CURRENCY}
-                            {l.qty * PRICE}
+                          <p className="text-right font-semibold">
+                            {money(l.qty * unit)}
+                            {unit < PRICE && <span className="block text-[12px] font-normal text-muted line-through">{money(l.qty * PRICE)}</span>}
                           </p>
                         </div>
                         <div className="mt-auto flex items-center justify-between pt-3">
@@ -230,21 +232,21 @@ function Drawer({ form, setForm }) {
             <footer className="border-t border-line bg-white px-6 py-5">
               <div className="flex justify-between text-sm text-muted">
                 <span>Subtotal</span>
-                <span>
-                  {CURRENCY}
-                  {subtotal}.00
-                </span>
+                <span>{money(subtotal)}</span>
               </div>
+              {discount > 0 && (
+                <div className="mt-1 flex justify-between text-sm font-medium text-brand">
+                  <span>Bundle discount ({Math.round((discount / subtotal) * 100)}%)</span>
+                  <span>−{money(discount)}</span>
+                </div>
+              )}
               <div className="mt-1 flex justify-between text-sm text-muted">
                 <span>Delivery</span>
                 <span>{remaining === 0 ? 'Free' : 'Confirmed on WhatsApp'}</span>
               </div>
               <div className="mt-3 flex justify-between text-lg font-semibold">
                 <span>Total</span>
-                <span>
-                  {CURRENCY}
-                  {subtotal}.00
-                </span>
+                <span>{money(total)}</span>
               </div>
               <button className="btn-primary mt-4 w-full !py-4" onClick={() => setStep('details')}>
                 Checkout
@@ -273,10 +275,7 @@ function Drawer({ form, setForm }) {
                 <span>
                   {count} tag{count > 1 ? 's' : ''}
                 </span>
-                <span>
-                  {CURRENCY}
-                  {subtotal}.00
-                </span>
+                <span>{money(total)}</span>
               </div>
               <button type="submit" className="btn mt-4 w-full bg-[#25D366] !py-4 text-white hover:bg-[#1ebe5b]">
                 <PlatformIcon name="whatsapp" className="h-5 w-5" /> Send order on WhatsApp

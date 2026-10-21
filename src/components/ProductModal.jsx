@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, Minus, Plus, ShieldCheck, Truck, X, Zap } from 'lucide-react'
+import { Check, ShieldCheck, Truck, X, Zap } from 'lucide-react'
 import ProductVisual from './ProductVisual'
 import { useCart } from '../lib/cart'
-import { CURRENCY, formats, FREE_DELIVERY_FROM, PRICE } from '../data/site'
+import { BUNDLES, formats, FREE_DELIVERY_FROM, MAX_SAVE, money, PRICE } from '../data/site'
 import { lockScroll, unlockScroll } from '../lib/scrollLock'
 
 export default function ProductModal({ product, onClose }) {
@@ -24,7 +24,8 @@ export default function ProductModal({ product, onClose }) {
 function Dialog({ product, onClose }) {
   const { add, setOpen } = useCart()
   const [format, setFormat] = useState('stand')
-  const [qty, setQty] = useState(1)
+  const [qty, setQty] = useState(2)
+  const bundle = BUNDLES.find((b) => b.qty === qty)
 
   return (
     <motion.div
@@ -68,9 +69,10 @@ function Dialog({ product, onClose }) {
         <div className="flex flex-col p-6 sm:p-10">
           {product.badge && <span className="chip w-fit">{product.badge}</span>}
           <h3 className="h-display mt-4 text-4xl md:text-5xl">{product.name}</h3>
-          <p className="mt-3 text-2xl font-semibold">
-            {CURRENCY}
-            {PRICE}.00 <span className="text-sm font-normal text-muted">per tag · one-time</span>
+          <p className="mt-3 flex flex-wrap items-baseline gap-x-3 gap-y-1 text-2xl font-semibold">
+            {money(bundle.unit)}
+            {bundle.save && <span className="text-base font-normal text-muted line-through">{money(PRICE)}</span>}
+            <span className="text-sm font-normal text-muted">per tag · one-time</span>
           </p>
           <p className="mt-4 leading-relaxed text-muted">{product.short}</p>
           <ul className="mt-5 space-y-2.5">
@@ -98,32 +100,57 @@ function Dialog({ product, onClose }) {
             </div>
           </fieldset>
 
-          <div className="mt-6 flex items-center gap-3">
-            <div className="flex h-[52px] items-center rounded-full border border-line">
-              <button
-                className="grid h-full w-12 cursor-pointer place-items-center"
-                onClick={() => setQty((q) => Math.max(1, q - 1))}
-                aria-label="Decrease quantity"
-              >
-                <Minus className="h-4 w-4" />
-              </button>
-              <span className="w-8 text-center font-semibold tabular-nums">{qty}</span>
-              <button className="grid h-full w-12 cursor-pointer place-items-center" onClick={() => setQty((q) => q + 1)} aria-label="Increase quantity">
-                <Plus className="h-4 w-4" />
-              </button>
+          <fieldset className="mt-7">
+            <legend className="flex w-full items-center justify-between text-sm font-semibold">
+              Bundle & save
+              <span className="rounded-full bg-lime px-2 py-0.5 font-mono text-[11px] font-medium">Up to {MAX_SAVE}% off</span>
+            </legend>
+            <div className="mt-3 flex flex-col gap-2.5" role="radiogroup">
+              {BUNDLES.map((b) => {
+                const on = qty === b.qty
+                return (
+                  <button
+                    key={b.qty}
+                    role="radio"
+                    aria-checked={on}
+                    onClick={() => setQty(b.qty)}
+                    className={`relative flex cursor-pointer items-center gap-3.5 rounded-2xl border p-3.5 text-left transition-all ${on ? 'border-ink bg-sky ring-1 ring-ink' : 'border-line hover:border-ink/40'}`}
+                  >
+                    <span className={`grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 ${on ? 'border-ink' : 'border-line'}`}>
+                      {on && <motion.span layoutId="bundle-dot" className="h-2.5 w-2.5 rounded-full bg-ink" />}
+                    </span>
+                    <span className="flex-1">
+                      <span className="flex flex-wrap items-center gap-2 text-[15px] font-semibold">
+                        {b.title}
+                        {b.badge && (
+                          <span className="rounded-full bg-ink px-2 py-0.5 font-mono text-[10px] font-medium uppercase tracking-wide text-white">
+                            {b.badge}
+                          </span>
+                        )}
+                      </span>
+                      <span className="block text-[13px] text-muted">{b.save ? `Save ${b.save}% · ${money(b.unit)} each` : b.note}</span>
+                    </span>
+                    <span className="text-right">
+                      <span className="block text-[15px] font-semibold">{money(b.unit * b.qty)}</span>
+                      {b.save && <span className="block text-[12px] text-muted line-through">{money(PRICE * b.qty)}</span>}
+                    </span>
+                  </button>
+                )
+              })}
             </div>
-            <button
-              className="btn-primary h-[52px] flex-1"
-              onClick={() => {
-                add(product.id, format, qty)
-                onClose()
-                setTimeout(() => setOpen(true), 250)
-              }}
-            >
-              Add to cart — {CURRENCY}
-              {PRICE * qty}
-            </button>
-          </div>
+          </fieldset>
+
+          <button
+            className="btn-primary mt-5 h-[54px] w-full"
+            onClick={() => {
+              add(product.id, format, qty)
+              onClose()
+              setTimeout(() => setOpen(true), 250)
+            }}
+          >
+            Add {qty > 1 ? `${qty} tags` : 'to cart'} · {money(bundle.unit * qty)}
+          </button>
+          <p className="mt-2 text-center text-[12px] text-muted">Bundle prices count every tag in your cart — mix any platforms.</p>
 
           <div className="mt-7 grid gap-3 border-t border-line pt-6 text-sm text-muted sm:grid-cols-3">
             <span className="flex items-center gap-2">
