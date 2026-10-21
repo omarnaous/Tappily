@@ -1,18 +1,14 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { useLayoutEffect, useRef, useState } from 'react'
+import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { SectionHeading } from './Reveal'
 import { asset, industries } from '../data/site'
 
 function Card({ item, i }) {
   return (
-    <motion.a
+    <a
       href="#shop"
-      className="group relative block aspect-[4/5] w-[78vw] shrink-0 overflow-hidden rounded-[28px] bg-ink sm:w-[46vw] lg:w-[30vw]"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.9, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+      className="group relative block aspect-[4/5] w-[78vw] shrink-0 overflow-hidden rounded-[28px] bg-ink sm:w-[46vw] md:w-[min(38vw,calc((100svh-340px)*0.8))] lg:w-[min(30vw,calc((100svh-340px)*0.8))]"
     >
       <img
         src={asset(item.img)}
@@ -31,35 +27,71 @@ function Card({ item, i }) {
           <ArrowUpRight className="h-5 w-5" />
         </span>
       </div>
-    </motion.a>
+    </a>
+  )
+}
+
+const heading = (
+  <SectionHeading
+    eyebrow="Made for"
+    title="Every place people tap."
+    text="From a café in Hamra to a salon in Jounieh — if customers visit you, Tapilly turns that visit into growth."
+  />
+)
+
+/** Desktop: the section pins and vertical scroll drives the cards sideways until the last one is fully in view. */
+function PinnedRow() {
+  const section = useRef(null)
+  const track = useRef(null)
+  const [distance, setDistance] = useState(0)
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      if (!track.current) return
+      setDistance(Math.max(0, track.current.scrollWidth - window.innerWidth))
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(track.current)
+    window.addEventListener('resize', measure)
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', measure)
+    }
+  }, [])
+
+  const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end end'] })
+  const raw = useTransform(scrollYProgress, [0, 1], [0, -distance])
+  const x = useSpring(raw, { stiffness: 220, damping: 40, mass: 0.4 })
+
+  return (
+    <section ref={section} className="relative hidden bg-white md:block" style={{ height: `calc(100vh + ${distance}px)` }}>
+      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
+        <div className="container-x">{heading}</div>
+        <motion.div ref={track} style={{ x }} className="mt-12 flex w-max gap-5 pl-[max(1rem,calc((100vw-1320px)/2+2.5rem))] pr-[6vw]">
+          {industries.map((it, i) => (
+            <Card key={it.title} item={it} i={i} />
+          ))}
+        </motion.div>
+      </div>
+    </section>
   )
 }
 
 export default function Industries() {
-  const ref = useRef(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const x = useTransform(scrollYProgress, [0, 1], ['6%', '-22%'])
   return (
-    <section ref={ref} className="overflow-hidden bg-white py-24 md:py-32">
-      <div className="container-x">
-        <SectionHeading
-          eyebrow="Made for"
-          title="Every place people tap."
-          text="From a café in Hamra to a salon in Jounieh — if customers visit you, Tapilly turns that visit into growth."
-        />
-      </div>
-      <motion.div style={{ x }} className="mt-14 hidden gap-5 pl-[6vw] md:flex">
-        {industries.map((it, i) => (
-          <Card key={it.title} item={it} i={i} />
-        ))}
-      </motion.div>
-      <div className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 md:hidden">
-        {industries.map((it, i) => (
-          <div key={it.title} className="snap-start">
-            <Card item={it} i={i} />
-          </div>
-        ))}
-      </div>
-    </section>
+    <>
+      <PinnedRow />
+      <section className="bg-white py-24 md:hidden">
+        <div className="container-x">{heading}</div>
+        <div className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4">
+          {industries.map((it, i) => (
+            <div key={it.title} className="snap-start">
+              <Card item={it} i={i} />
+            </div>
+          ))}
+        </div>
+      </section>
+    </>
   )
 }

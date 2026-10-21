@@ -43,7 +43,7 @@ const year = new Date().getFullYear()
 
 export default function Footer() {
   return (
-    <footer className="bg-ink pb-28 text-white/70 md:pb-10">
+    <footer className="overflow-hidden bg-ink pb-28 text-white/70 md:pb-10">
       <div className="container-x border-t border-white/10 pt-14">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>

@@ -37,7 +37,7 @@
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply bg-ink text-ink font-sans;
+    @apply bg-paper text-ink font-sans;
   }
   ::selection {
     background: var(--color-brand);

@@ -10,7 +10,6 @@ import { categories, CURRENCY, PRICE, products } from '../data/site'
 
 function ProductCard({ product, index, onOpen }) {
   const { add } = useCart()
-  const [hover, setHover] = useState(false)
   return (
     <motion.article
       layout
@@ -20,16 +19,14 @@ function ProductCard({ product, index, onOpen }) {
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.8, delay: (index % 4) * 0.08, ease: [0.16, 1, 0.3, 1] }}
       className="group"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
     >
       <div className="relative cursor-pointer overflow-hidden rounded-3xl" onClick={() => onOpen(product)}>
-        <div className="transition-transform duration-700 ease-(--ease-out-expo) group-hover:scale-[1.03]">
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.div key={hover ? 'card' : 'stand'} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.45 }}>
-              <ProductVisual product={product} format={hover ? 'card' : 'stand'} />
-            </motion.div>
-          </AnimatePresence>
+        <div className="relative transition-transform duration-700 ease-(--ease-out-expo) pointer-fine:group-hover:scale-[1.03]">
+          {/* Both formats stay mounted; the card fades in on hover (mouse only, so taps never get stuck on it). */}
+          <ProductVisual product={product} format="stand" interactive={false} />
+          <div className="absolute inset-0 opacity-0 transition-opacity duration-500 pointer-fine:group-hover:opacity-100">
+            <ProductVisual product={product} format="card" />
+          </div>
         </div>
         {product.badge && (
           <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[10px] sm:left-4 sm:top-4 sm:px-3 sm:text-[11px] font-bold uppercase tracking-wider text-ink shadow-sm backdrop-blur">
@@ -41,7 +38,7 @@ function ProductCard({ product, index, onOpen }) {
             e.stopPropagation()
             add(product.id, 'stand')
           }}
-          className="absolute bottom-3 right-3 flex h-10 w-10 translate-y-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-ink text-sm sm:inset-x-4 sm:bottom-4 sm:h-auto sm:w-auto sm:py-3 font-semibold text-white opacity-100 shadow-lg transition-all duration-500 ease-(--ease-out-expo) hover:bg-brand md:translate-y-[130%] md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100"
+          className="absolute bottom-3 right-3 flex h-10 w-10 translate-y-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-ink text-sm sm:inset-x-4 sm:bottom-4 sm:h-auto sm:w-auto sm:py-3 font-semibold text-white opacity-100 shadow-lg transition-all duration-500 ease-(--ease-out-expo) hover:bg-brand pointer-fine:translate-y-[130%] pointer-fine:opacity-0 pointer-fine:group-hover:translate-y-0 pointer-fine:group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100"
           aria-label={`Quick add ${product.name} to cart`}
         >
           <Plus className="h-4 w-4" />

@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import { Menu, ShoppingBag, X } from 'lucide-react'
 import { Logo } from './Brand'
 import { useCart } from '../lib/cart'
 import { FREE_DELIVERY_FROM } from '../data/site'
+import { lockScroll, scrollToHash, unlockScroll } from '../lib/scrollLock'
 
 const links = [
   { href: '#shop', label: 'Shop' },
@@ -49,7 +50,20 @@ export default function Navbar() {
     setHidden(y > 600 && y > prev && !mobile)
   })
 
-  const dark = !scrolled || mobile
+  const dark = mobile // light hero: dark text everywhere except over the open mobile menu
+
+  useEffect(() => {
+    if (!mobile) return
+    lockScroll()
+    return unlockScroll
+  }, [mobile])
+
+  // Menu links: close the overlay first, then scroll once scrolling is unlocked again.
+  const go = (e, href) => {
+    e.preventDefault()
+    setMobile(false)
+    requestAnimationFrame(() => scrollToHash(href))
+  }
 
   return (
     <>
@@ -130,7 +144,7 @@ export default function Navbar() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.05 * i + 0.1, ease: [0.16, 1, 0.3, 1], duration: 0.7 }}
                 >
-                  <a href={l.href} onClick={() => setMobile(false)} className="h-display block py-2 text-5xl text-white">
+                  <a href={l.href} onClick={(e) => go(e, l.href)} className="h-display block py-2 text-5xl text-white">
                     {l.label}
                   </a>
                 </motion.li>

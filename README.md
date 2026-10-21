@@ -2,15 +2,15 @@
 
 Storefront for [Tapilly](https://www.instagram.com/tapilly.lb/) (Tap + Happily): smart NFC tags for businesses in Lebanon, $25 per tag.
 
-Built with React 19, Vite, Tailwind CSS v4, Framer Motion and Lenis smooth scrolling.
+Built with React 19, Vite, Tailwind CSS v4, Framer Motion and Lenis smooth scrolling. Videos are made in code with [Remotion](https://www.remotion.dev/).
 
 ## Features
 
-- Full-bleed looping hero video (rendered from code, see below)
+- Hero with a seamless 12 s product film: a phone taps the stand and opens Google Reviews, Instagram, WhatsApp and a menu, each tap flooding the frame with that channel's colour
 - Product collection with category filters, hover format swap, quick add and a product modal (stand / card format, quantity)
 - Cart drawer with a free-delivery progress bar, persisted in `localStorage`
 - Checkout that sends a pre-filled order to Tapilly's WhatsApp (+961 76 693 639), so no payment backend is needed
-- Scroll-pinned "How it works" story, bento features, a scroll-highlighted statement, an industries carousel, pricing packs, Instagram feed, FAQ
+- Scroll-pinned "How it works" story scrubbed frame-by-frame by scroll (a live Remotion player), pinned horizontal industries row, bento features, a scroll-highlighted statement, an industries carousel, pricing packs, Instagram feed, FAQ
 - Mobile sticky shop bar; respects `prefers-reduced-motion`
 
 ## Editing content
@@ -26,13 +26,32 @@ npm run build     # production build in dist/
 npm run lint
 ```
 
-### Hero video
+### Videos (`video/`)
 
-`public/video/hero.{mp4,webm}` is rendered from [`tools/hero-video/scene.html`](tools/hero-video/scene.html) with Playwright and ffmpeg:
+A separate Remotion project. The website imports its scenes directly, so the hero film, the scroll story and the promo reel share one set of components.
+
+| Composition | Size | Use |
+|---|---|---|
+| `HeroLoop` | 1080×1350, 12 s seamless loop, silent | website hero (`public/video/hero.*`) |
+| `TapStory` | 1080×1080, 5 s | "How it works", played live and scrubbed by scroll |
+| `Promo` / `PromoNoMusic` | 1080×1920, 16.5 s, with sound | Instagram Reels / TikTok |
 
 ```bash
-npm run hero-video   # needs a Chromium (CHROMIUM_PATH) and ffmpeg
+cd video && npm install
+npm run studio                          # preview and tweak in Remotion Studio
+node render.mjs                         # render every composition to video/out/
+node render.mjs HeroLoop 0,30,90        # render stills for review
 ```
+
+Timing lives in `video/src/timing.js`, channel colours and copy in `video/src/theme.js`, and the soundtrack cue sheets in `video/sound/*.json` (synthesized; UI sounds in `video/sound/sfx` are CC0).
+After re-rendering `HeroLoop`, re-encode it for the web:
+
+```bash
+ffmpeg -i video/out/HeroLoop.mp4 -vf scale=900:-2 -c:v libx264 -crf 25 -preset slow -movflags +faststart -an public/video/hero.mp4
+ffmpeg -i video/out/HeroLoop.mp4 -vf scale=900:-2 -c:v libvpx-vp9 -b:v 0 -crf 36 -an public/video/hero.webm
+```
+
+Remotion is free for individuals and companies of up to 3 people; larger companies need a [company license](https://remotion.dev/license).
 
 ## Deployment
 

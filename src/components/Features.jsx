@@ -63,10 +63,10 @@ export default function Features() {
           <Tile className="md:col-span-2" delay={0.08}>
             <Smartphone className="h-7 w-7 text-brand" />
             <p className="h-display mt-6 text-6xl">
-              <Counter to={0} />
-              <span className="text-brand"> apps</span>
+              <Counter to={25} prefix="$" />
+              <span className="text-brand"> once</span>
             </p>
-            <p className="mt-2 text-muted">Works natively on iPhone and Android. Nothing to download.</p>
+            <p className="mt-2 text-muted">Per tag, one-time. No subscriptions, no monthly fees, no app to download.</p>
           </Tile>
 
           <Tile className="md:col-span-2" delay={0.12}>
