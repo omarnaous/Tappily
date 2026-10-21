@@ -1,40 +1,46 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, MapPin, Phone } from 'lucide-react'
 import { Logo, LogoMark, PlatformIcon } from './Brand'
 import { SplitWords } from './Reveal'
 import { contact, whatsappLink } from '../data/site'
 
 export function FinalCTA() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'center center'] })
+  const scale = useTransform(scrollYProgress, [0, 1], [0.88, 1])
+  const radius = useTransform(scrollYProgress, [0, 1], [80, 40])
   return (
-    <section id="contact" className="noise relative isolate scroll-mt-24 overflow-hidden bg-ink py-28 text-white md:py-40">
-      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(700px_400px_at_50%_100%,rgba(8,85,214,0.55),transparent_70%)]" />
-      <motion.div
-        className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[46rem] w-[46rem] -translate-x-1/2 -translate-y-1/2 opacity-[0.06]"
-        animate={{ rotate: 360 }}
-        transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
-      >
-        <LogoMark className="h-full w-full" base="#fff" accent="#fff" />
-      </motion.div>
-      <div className="container-x text-center">
-        <p className="eyebrow text-brand-2">Ready when you are</p>
-        <h2 className="h-display mx-auto mt-5 max-w-4xl text-[clamp(2.8rem,8vw,7rem)]">
-          <SplitWords text="Get your business tapped." />
-        </h2>
-        <p className="mx-auto mt-6 max-w-xl text-lg text-white/65">Order in two minutes. We program, brand and deliver your tags anywhere in Lebanon.</p>
-        <div className="mt-10 flex flex-wrap justify-center gap-3">
-          <a href="#shop" className="btn-brand group !px-8 !py-4 text-base">
-            Shop now <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </a>
-          <a
-            href={whatsappLink('Hi Tapilly! I want to order NFC tags for my business.')}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-glass !px-8 !py-4 text-base"
-          >
-            <PlatformIcon name="whatsapp" className="h-4 w-4" /> Order on WhatsApp
-          </a>
+    <section id="contact" ref={ref} className="scroll-mt-24 bg-paper px-3 pb-3 pt-10 sm:px-4 sm:pb-4">
+      <motion.div style={{ scale, borderRadius: radius }} className="relative isolate overflow-hidden bg-lime px-6 py-24 text-ink md:py-36">
+        <motion.div
+          className="pointer-events-none absolute -right-24 -top-24 -z-10 h-[34rem] w-[34rem] opacity-[0.07]"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 80, repeat: Infinity, ease: 'linear' }}
+        >
+          <LogoMark className="h-full w-full" base="#0e0e0c" accent="#0e0e0c" />
+        </motion.div>
+        <div className="mx-auto max-w-5xl text-center">
+          <p className="eyebrow !text-ink/60">Ready when you are</p>
+          <h2 className="h-display mx-auto mt-5 text-[clamp(2.8rem,8.5vw,7.5rem)]">
+            <SplitWords text="Get your business tapped." />
+          </h2>
+          <p className="mx-auto mt-6 max-w-xl text-lg text-ink/70">Order in two minutes. We program, brand and deliver your tags anywhere in Lebanon.</p>
+          <div className="mt-10 flex flex-col justify-center gap-3 sm:flex-row">
+            <a href="#shop" className="btn-primary group !px-8 !py-4 text-base">
+              Shop now <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </a>
+            <a
+              href={whatsappLink('Hi Tapilly! I want to order NFC tags for my business.')}
+              target="_blank"
+              rel="noreferrer"
+              className="btn !bg-white !px-8 !py-4 text-base text-ink hover:!bg-ink hover:text-white"
+            >
+              <PlatformIcon name="whatsapp" className="h-4 w-4" /> Order on WhatsApp
+            </a>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   )
 }
@@ -43,8 +49,8 @@ const year = new Date().getFullYear()
 
 export default function Footer() {
   return (
-    <footer className="overflow-hidden bg-ink pb-28 text-white/70 md:pb-10">
-      <div className="container-x border-t border-white/10 pt-14">
+    <footer className="overflow-hidden bg-ink pb-28 text-white/70 md:mx-4 md:mb-4 md:rounded-[40px] md:pb-10">
+      <div className="container-x pt-16">
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Logo light className="text-2xl" />
@@ -64,8 +70,8 @@ export default function Footer() {
                 </a>
               </li>
               <li>
-                <a className="hover:text-white" href="#how">
-                  How it works
+                <a className="hover:text-white" href="#benefits">
+                  Impact
                 </a>
               </li>
             </ul>

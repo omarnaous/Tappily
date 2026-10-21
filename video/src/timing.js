@@ -21,8 +21,5 @@ export const C = {
 // Hero loop: 4 channels, seamless at 360
 export const HERO_DURATION = CYCLE * 4
 
-// Scroll-scrubbed story for "How it works"
-export const STORY = { duration: 150, enter: [0, 34], swoop: [34, 46], tap: 46, open: [48, 58], rise: [50, 76], app: 58, done: 112 }
-
 // Promo reel: 4 taps then the end card
 export const PROMO = { cycles: 4, end: CYCLE * 4, logo: CYCLE * 4 + 15, tagline: CYCLE * 4 + 40, cta: CYCLE * 4 + 58, duration: CYCLE * 4 + 135 }

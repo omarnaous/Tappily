@@ -158,10 +158,38 @@ export const steps = [
 ]
 
 export const industries = [
-  { title: 'Restaurants & cafés', text: 'Menus, reviews and Instagram on every table.', img: 'images/ig-restaurant.jpg' },
-  { title: 'Retail & shops', text: 'Followers and payments right at the counter.', img: 'images/ig-shop.jpg' },
-  { title: 'Salons & gyms', text: 'Bookings and reviews after every session.', img: 'images/ig-stop-searching.jpg' },
-  { title: 'Hotels & venues', text: 'Wi-Fi, menus and directions in one tap.', img: 'images/ig-menu-one-tap.jpg' },
+  {
+    id: 'restaurant',
+    title: 'Restaurants & cafés',
+    text: 'A menu on every table, a review stand by the till. Guests order faster and leave the review while the meal is still fresh.',
+    tags: ['menu', 'google-review', 'instagram'],
+    img: 'images/industry-restaurant.webp',
+    tint: '#f6dccb',
+  },
+  {
+    id: 'retail',
+    title: 'Shops & boutiques',
+    text: 'Turn every customer at the counter into a follower, and take payments without spelling out your number.',
+    tags: ['instagram', 'whish', 'tiktok'],
+    img: 'images/industry-retail.webp',
+    tint: '#e3f1c8',
+  },
+  {
+    id: 'salon',
+    title: 'Salons, spas & gyms',
+    text: 'Clients rebook on WhatsApp before they leave the chair, and your reviews grow after every session.',
+    tags: ['whatsapp', 'google-review', 'instagram'],
+    img: 'images/industry-salon.webp',
+    tint: '#f8dbe5',
+  },
+  {
+    id: 'hotel',
+    title: 'Hotels & venues',
+    text: 'Reviews at reception, Wi-Fi and directions in the room, the menu at the bar — all without printing a single QR code.',
+    tags: ['google-review', 'custom', 'menu'],
+    img: 'images/industry-hotel.webp',
+    tint: '#cfeceb',
+  },
 ]
 
 export const instagramPosts = [

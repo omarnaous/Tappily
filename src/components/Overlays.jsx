@@ -60,7 +60,7 @@ export function MobileBar() {
             {count > 0 ? (
               <button
                 onClick={() => setOpen(true)}
-                className="flex flex-1 cursor-pointer items-center justify-between rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white"
+                className="flex flex-1 cursor-pointer items-center justify-between rounded-full bg-lime px-5 py-3 text-sm font-semibold text-ink"
               >
                 <span className="flex items-center gap-2">
                   <ShoppingBag className="h-4 w-4" /> View cart ({count})
@@ -71,7 +71,7 @@ export function MobileBar() {
                 </span>
               </button>
             ) : (
-              <a href="#shop" className="flex flex-1 items-center justify-between rounded-full bg-brand px-5 py-3 text-sm font-semibold text-white">
+              <a href="#shop" className="flex flex-1 items-center justify-between rounded-full bg-lime px-5 py-3 text-sm font-semibold text-ink">
                 <span>Shop NFC tags</span>
                 <span>
                   from {CURRENCY}

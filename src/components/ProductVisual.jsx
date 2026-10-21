@@ -118,7 +118,7 @@ export default function ProductVisual({ product, format = 'stand', interactive =
       className={`relative aspect-[4/5] w-full overflow-hidden [container-type:inline-size] ${className}`}
       style={{
         perspective: '1200px',
-        background: `radial-gradient(120% 90% at 50% 100%, ${t.a}33, transparent 60%), radial-gradient(80% 60% at 80% 0%, ${t.b}22, transparent 70%), #f1f2f6`,
+        background: `radial-gradient(90% 70% at 50% 92%, ${t.a}2e, transparent 65%), #ebeae5`,
       }}
     >
       <div className="absolute inset-x-[18%] bottom-[9%] h-[8%] rounded-[50%] bg-black/25 blur-[3cqw]" />

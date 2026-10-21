@@ -8,7 +8,7 @@ import { lockScroll, scrollToHash, unlockScroll } from '../lib/scrollLock'
 
 const links = [
   { href: '#shop', label: 'Shop' },
-  { href: '#how', label: 'How it works' },
+  { href: '#benefits', label: 'Impact' },
   { href: '#pricing', label: 'Pricing' },
   { href: '#faq', label: 'FAQ' },
 ]
@@ -74,7 +74,7 @@ export default function Navbar() {
       >
         <nav
           className={`mx-auto flex h-16 max-w-[1320px] items-center justify-between rounded-2xl px-4 transition-all duration-500 sm:px-6 ${
-            scrolled ? 'border border-white/60 bg-white/75 shadow-[0_10px_40px_-15px_rgba(7,13,31,0.3)] backdrop-blur-xl' : 'border border-transparent'
+            scrolled ? 'border border-line bg-card/85 shadow-[0_16px_40px_-24px_rgba(14,14,12,0.35)] backdrop-blur-xl' : 'border border-transparent'
           }`}
         >
           <a href="#top" className="text-[19px]" aria-label="Tapilly home">
@@ -93,7 +93,7 @@ export default function Navbar() {
             ))}
           </ul>
           <div className="flex items-center gap-2">
-            <a href="#shop" className={`hidden sm:inline-flex ${dark ? 'btn-glass' : 'btn-primary'} !px-5 !py-2.5 !text-[14px]`}>
+            <a href="#shop" className={`hidden sm:inline-flex ${dark ? 'btn-glass' : 'btn-brand'} !px-5 !py-2.5 !text-[14px]`}>
               Shop tags
             </a>
             <button
@@ -109,7 +109,7 @@ export default function Navbar() {
                     initial={{ scale: 0.4, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0, opacity: 0 }}
-                    className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-brand px-1 text-[11px] font-bold text-white"
+                    className="absolute -right-0.5 -top-0.5 grid h-5 min-w-5 place-items-center rounded-full bg-lime px-1 text-[11px] font-bold text-ink ring-2 ring-paper"
                   >
                     {count}
                   </motion.span>
@@ -130,12 +130,7 @@ export default function Navbar() {
 
       <AnimatePresence>
         {mobile && (
-          <motion.div
-            className="fixed inset-0 z-30 bg-ink/95 backdrop-blur-xl md:hidden"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
+          <motion.div className="fixed inset-0 z-30 bg-ink md:hidden" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <ul className="flex h-full flex-col justify-center gap-2 px-8">
               {links.map((l, i) => (
                 <motion.li

@@ -2,7 +2,7 @@
 
 Storefront for [Tapilly](https://www.instagram.com/tapilly.lb/) (Tap + Happily): smart NFC tags for businesses in Lebanon, $25 per tag.
 
-Built with React 19, Vite, Tailwind CSS v4, Framer Motion and Lenis smooth scrolling. Videos are made in code with [Remotion](https://www.remotion.dev/).
+Built with React 19, Vite, Tailwind CSS v4, Framer Motion and Lenis smooth scrolling, set in Geist. Videos and scene images are made in code with [Remotion](https://www.remotion.dev/).
 
 ## Features
 
@@ -10,7 +10,8 @@ Built with React 19, Vite, Tailwind CSS v4, Framer Motion and Lenis smooth scrol
 - Product collection with category filters, hover format swap, quick add and a product modal (stand / card format, quantity)
 - Cart drawer with a free-delivery progress bar, persisted in `localStorage`
 - Checkout that sends a pre-filled order to Tapilly's WhatsApp (+961 76 693 639), so no payment backend is needed
-- Scroll-pinned "How it works" story scrubbed frame-by-frame by scroll (a live Remotion player), pinned horizontal industries row, bento features, a scroll-highlighted statement, an industries carousel, pricing packs, Instagram feed, FAQ
+- "The impact" dashboard: an interactive growth estimator with live charts, a friction comparison and cost-per-result tile
+- Stacking "Every place people tap" cards with Remotion-rendered scenes, bento features, a scroll-highlighted statement, an industries carousel, pricing packs, Instagram feed, FAQ
 - Mobile sticky shop bar; respects `prefers-reduced-motion`
 
 ## Editing content
@@ -28,12 +29,12 @@ npm run lint
 
 ### Videos (`video/`)
 
-A separate Remotion project. The website imports its scenes directly, so the hero film, the scroll story and the promo reel share one set of components.
+A separate Remotion project. The hero film, the industry scenes and the promo reel share one set of components.
 
 | Composition | Size | Use |
 |---|---|---|
 | `HeroLoop` | 1080×1350, 12 s seamless loop, silent | website hero (`public/video/hero.*`) |
-| `TapStory` | 1080×1080, 5 s | "How it works", played live and scrubbed by scroll |
+| `Industry-*` | 1080×1350 stills | "Every place people tap" cards (`public/images/industry-*.webp`) |
 | `Promo` / `PromoNoMusic` | 1080×1920, 16.5 s, with sound | Instagram Reels / TikTok |
 
 ```bash
@@ -51,7 +52,7 @@ ffmpeg -i video/out/HeroLoop.mp4 -vf scale=900:-2 -c:v libx264 -crf 25 -preset s
 ffmpeg -i video/out/HeroLoop.mp4 -vf scale=900:-2 -c:v libvpx-vp9 -b:v 0 -crf 36 -an public/video/hero.webm
 ```
 
-Remotion is free for individuals and companies of up to 3 people; larger companies need a [company license](https://remotion.dev/license).
+Remotion is free for individuals and companies of up to 3 people; larger companies need a [company license](https://remotion.dev/license) to keep rendering.
 
 ## Deployment
 

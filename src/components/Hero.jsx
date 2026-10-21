@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { ArrowRight, Check, Play } from 'lucide-react'
-import { NfcWaves } from './Brand'
-import { SplitWords } from './Reveal'
+import { ArrowRight, Check } from 'lucide-react'
+import { PlatformIcon } from './Brand'
+import { MiniColumns, Sparkline } from './charts'
 import { asset, CURRENCY, PRICE } from '../data/site'
 
 const ease = [0.16, 1, 0.3, 1]
@@ -39,115 +39,179 @@ function HeroVideo() {
   )
 }
 
-const Float = ({ className, delay, children }) => (
-  <motion.div
-    className={`absolute z-10 hidden items-center gap-2.5 rounded-2xl border border-white/70 bg-white/85 px-4 py-3 text-sm font-semibold text-ink shadow-[0_20px_50px_-20px_rgba(7,13,31,0.35)] backdrop-blur-md sm:flex ${className}`}
-    initial={{ opacity: 0, y: 20, scale: 0.9 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    transition={{ duration: 0.9, delay, ease }}
-  >
-    {children}
-  </motion.div>
-)
+// Illustrative numbers for a sample café, labelled as such under the stage.
+function Kpi({ icon, iconColor, title, value, delta, children, className = '', delay = 0 }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay, ease }}
+      className={`card p-4 shadow-[0_30px_60px_-40px_rgba(14,14,12,0.35)] sm:p-5 ${className}`}
+    >
+      <div className="flex items-center gap-2 text-[13px] font-medium text-ink-2">
+        <span className="grid h-7 w-7 place-items-center rounded-full bg-mist">
+          <PlatformIcon name={icon} className="h-3.5 w-3.5" color={iconColor} />
+        </span>
+        {title}
+      </div>
+      <div className="mt-3 flex items-end justify-between gap-3">
+        <div>
+          <p className="text-[28px] font-semibold leading-none tracking-tight sm:text-[34px]">{value}</p>
+          <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-sky px-2 py-0.5 font-mono text-[11px] font-medium text-brand">▲ {delta}</p>
+        </div>
+        <div className="hidden sm:block">{children}</div>
+      </div>
+    </motion.div>
+  )
+}
 
 export default function Hero() {
   const ref = useRef(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const cardY = useTransform(scrollYProgress, [0, 1], [0, 90])
-  const cardRotate = useTransform(scrollYProgress, [0, 1], [0, -2])
-  const textY = useTransform(scrollYProgress, [0, 1], [0, -60])
+  const stageScale = useTransform(scrollYProgress, [0, 0.6], [1, 0.94])
+  const leftY = useTransform(scrollYProgress, [0, 1], [0, -90])
+  const rightY = useTransform(scrollYProgress, [0, 1], [0, -40])
 
   return (
-    <section id="top" ref={ref} className="relative isolate overflow-hidden bg-paper">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -left-40 top-20 h-[34rem] w-[34rem] rounded-full bg-[radial-gradient(circle,rgba(61,123,255,0.22),transparent_65%)]" />
-        <div className="absolute -right-32 top-0 h-[40rem] w-[40rem] rounded-full bg-[radial-gradient(circle,rgba(255,177,71,0.22),transparent_65%)]" />
-        <div className="absolute bottom-0 left-1/3 h-[30rem] w-[30rem] rounded-full bg-[radial-gradient(circle,rgba(214,41,118,0.12),transparent_65%)]" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(7,13,31,0.045)_1px,transparent_1px),linear-gradient(90deg,rgba(7,13,31,0.045)_1px,transparent_1px)] bg-[size:72px_72px] [mask-image:radial-gradient(ellipse_at_40%_30%,#000_20%,transparent_70%)]" />
-      </div>
-
-      <div className="container-x grid min-h-[100svh] items-center gap-12 pb-16 pt-32 md:pt-36 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10 lg:pb-20">
-        <motion.div style={{ y: textY }}>
+    <section id="top" ref={ref} className="relative overflow-hidden bg-paper pb-16 pt-28 sm:pt-32 md:pb-24 md:pt-40">
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[640px] bg-[radial-gradient(60%_60%_at_50%_0%,#ffffff_0%,rgba(255,255,255,0)_70%)]" />
+      <div className="container-x relative">
+        <div className="mx-auto max-w-4xl text-center">
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease }}
-            className="inline-flex items-center gap-2 rounded-full border border-ink/10 bg-white/70 py-1.5 pl-1.5 pr-4 text-[13px] text-ink/75 backdrop-blur"
+            transition={{ duration: 0.8, ease }}
+            className="inline-flex items-center gap-2 rounded-full border border-line bg-card py-1 pl-1 pr-3.5 text-[13px] text-ink-2"
           >
-            <span className="rounded-full bg-brand px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white">NFC</span>
-            Smart tags for businesses in Lebanon 🇱🇧
+            <span className="rounded-full bg-lime px-2 py-0.5 font-mono text-[11px] font-semibold text-ink">NEW</span>
+            Smart NFC tags for businesses in Lebanon
           </motion.div>
 
-          <h1 className="h-display mt-6 text-[clamp(3rem,6.4vw,6rem)] text-ink">
-            <SplitWords text="Your business," immediate delay={0.2} />
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.1, ease }}
+            className="h-display mt-6 text-[clamp(2.75rem,8.4vw,6.4rem)] text-ink"
+          >
+            Your business,
             <br />
-            <span className="bg-gradient-to-r from-brand via-[#6b4dff] to-[#e1306c] bg-clip-text pr-2 text-transparent">
-              <SplitWords text="one tap away." immediate delay={0.4} />
-            </span>
-          </h1>
+            <span className="relative inline-block whitespace-nowrap">
+              <motion.span
+                aria-hidden="true"
+                className="absolute inset-x-[-0.08em] bottom-[0.06em] top-[0.14em] -z-0 origin-left rounded-[0.18em] bg-lime"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ duration: 0.9, delay: 0.55, ease }}
+              />
+              <span className="relative">one tap</span>
+            </span>{' '}
+            away.
+          </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.75, ease }}
-            className="mt-6 max-w-xl text-lg leading-relaxed text-muted md:text-xl"
+            transition={{ duration: 1, delay: 0.3, ease }}
+            className="mx-auto mt-6 max-w-xl text-[17px] leading-relaxed text-muted md:text-lg"
           >
-            Google reviews, Instagram follows, WhatsApp chats, menus and payments. Your customers just tap their phone — no QR codes, no searching, no typing.
+            Google reviews, Instagram follows, WhatsApp chats and menus — customers just tap their phone. No app, no QR code, no typing.
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.9, ease }}
-            className="mt-9 flex flex-wrap items-center gap-3"
+            transition={{ duration: 1, delay: 0.4, ease }}
+            className="mt-8 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
           >
-            <a href="#shop" className="btn-primary group !px-7 !py-4 text-base">
-              Shop NFC tags — {CURRENCY}
+            <a href="#shop" className="btn-primary group !py-4">
+              Shop NFC tags · {CURRENCY}
               {PRICE}
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </a>
-            <a href="#how" className="btn-ghost !px-7 !py-4 text-base">
-              <Play className="h-4 w-4 fill-current" /> How it works
+            <a href="#benefits" className="btn-ghost !py-4">
+              See the impact
             </a>
           </motion.div>
 
           <motion.ul
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.1 }}
-            className="mt-10 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink/60"
+            transition={{ duration: 1, delay: 0.6 }}
+            className="mt-6 flex flex-wrap justify-center gap-x-5 gap-y-2 text-[13px] text-muted"
           >
-            {['No app needed', 'iPhone & Android', 'One-time price, no subscription'].map((t) => (
-              <li key={t} className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-brand" /> {t}
+            {['No app needed', 'iPhone & Android', 'One-time price'].map((t) => (
+              <li key={t} className="flex items-center gap-1.5">
+                <Check className="h-3.5 w-3.5 text-brand" strokeWidth={2.5} /> {t}
               </li>
             ))}
           </motion.ul>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="relative mx-auto w-full max-w-[520px] lg:max-w-none"
-          initial={{ opacity: 0, y: 40, scale: 0.96 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 1.2, delay: 0.3, ease }}
-        >
-          <motion.div style={{ y: cardY, rotate: cardRotate }} className="relative">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[36px] bg-ink shadow-[0_60px_120px_-40px_rgba(7,13,31,0.55)] ring-1 ring-ink/5">
-              <HeroVideo />
-            </div>
-            <Float className="-left-8 top-[18%]" delay={1.2}>
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-brand text-white">
-                <NfcWaves className="h-4 w-4" />
-              </span>
-              Tap, don't type
-            </Float>
-            <Float className="-right-6 bottom-[16%]" delay={1.35}>
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-emerald-500 text-white">
-                <Check className="h-4 w-4" strokeWidth={3} />
-              </span>
-              Opens in under a second
-            </Float>
-          </motion.div>
+        {/* Stage: the product film in the middle, profile metrics around it */}
+        <motion.div style={{ scale: stageScale }} className="relative mx-auto mt-12 max-w-[1180px] md:mt-16">
+          <div className="grid items-center gap-4 lg:grid-cols-[1fr_400px_1fr] lg:gap-6">
+            <motion.div style={{ y: leftY }} className="hidden flex-col gap-4 lg:flex">
+              <Kpi icon="google" iconColor="#4285F4" title="Google reviews" value="212" delta="46 this month" delay={0.7} className="lg:ml-6">
+                <Sparkline values={[118, 124, 131, 139, 166, 212]} width={150} height={52} label={(v, i) => `Month ${i + 1}: ${v}`} />
+              </Kpi>
+              <Kpi icon="whatsapp" iconColor="#128C7E" title="WhatsApp chats" value="99" delta="this week" delay={0.85} className="lg:-mr-6">
+                <MiniColumns
+                  values={[9, 12, 8, 14, 18, 22, 16]}
+                  labels={['M', 'T', 'W', 'T', 'F', 'S', 'S']}
+                  width={150}
+                  height={44}
+                  highlight={5}
+                  format={(v) => `${v} chats`}
+                />
+              </Kpi>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 40, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 1.2, delay: 0.35, ease }}
+              className="relative mx-auto w-full max-w-[420px]"
+            >
+              <div className="relative aspect-[4/5] overflow-hidden rounded-[32px] bg-ink shadow-[0_50px_100px_-40px_rgba(14,14,12,0.6)]">
+                <HeroVideo />
+              </div>
+            </motion.div>
+
+            <motion.div style={{ y: rightY }} className="hidden flex-col gap-4 lg:flex">
+              <Kpi icon="instagram" iconColor="#D62976" title="Instagram followers" value="12.4K" delta="318 this month" delay={0.8} className="lg:-ml-6">
+                <Sparkline values={[11.2, 11.35, 11.5, 11.7, 12.1, 12.4]} width={150} height={52} label={(v, i) => `Month ${i + 1}: ${v}K`} />
+              </Kpi>
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.95, ease }}
+                className="card flex items-center gap-4 p-4 shadow-[0_30px_60px_-40px_rgba(14,14,12,0.35)] lg:mr-6"
+              >
+                <img src={asset('images/industry-restaurant.webp')} alt="" className="h-16 w-16 rounded-2xl object-cover" />
+                <div className="flex-1">
+                  <p className="text-[13px] text-muted">Digital Menu Tag</p>
+                  <p className="font-semibold">
+                    {CURRENCY}
+                    {PRICE}.00 <span className="font-normal text-muted">· one-time</span>
+                  </p>
+                </div>
+                <a
+                  href="#shop"
+                  className="grid h-10 w-10 place-items-center rounded-full bg-lime text-ink transition-transform hover:scale-110"
+                  aria-label="Shop tags"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </a>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Phone: two compact metrics under the film */}
+          <div className="mt-4 grid grid-cols-2 gap-3 lg:hidden">
+            <Kpi icon="google" iconColor="#4285F4" title="Reviews" value="212" delta="46 / mo" delay={0.6} />
+            <Kpi icon="instagram" iconColor="#D62976" title="Followers" value="12.4K" delta="318 / mo" delay={0.7} />
+          </div>
+          <p className="mt-5 text-center font-mono text-[11px] text-muted">Illustrative figures for a sample café — not real customer data.</p>
         </motion.div>
       </div>
     </section>

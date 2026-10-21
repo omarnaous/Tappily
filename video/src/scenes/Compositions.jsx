@@ -1,7 +1,7 @@
 import { AbsoluteFill, Easing, interpolate, spring, useCurrentFrame, useVideoConfig } from 'remotion'
 import { Flash, Grain, Shockwave, Streak, Burst, clamp, easeOut, easeIn, shake } from '../fx.jsx'
 import { CHANNELS, FONT, BRAND } from '../theme.js'
-import { C, CYCLE, PROMO, STORY } from '../timing.js'
+import { C, CYCLE, PROMO } from '../timing.js'
 import { Backdrop, NFC, TapScene, useStage } from './TapScene.jsx'
 import { LogoMark } from '../parts/Brand.jsx'
 
@@ -21,20 +21,6 @@ export function HeroLoop() {
       <Backdrop prev={CHANNELS[(n + N - 1) % N]} ch={ch} f={cf} T={C} origin={stage.map(NFC)} />
       <TapScene ch={ch} next={CHANNELS[(n + 1) % N]} f={cf} gf={f} period={durationInFrames} T={C} stage={stage} />
       <Grain f={f} opacity={0.05} />
-    </AbsoluteFill>
-  )
-}
-
-/** Tap -> Connect -> Done, scrubbed by scroll on the website ("How it works"). */
-export function TapStory() {
-  const f = useCurrentFrame()
-  const { durationInFrames } = useVideoConfig()
-  const stage = useStage()
-  const T = { ...STORY, chipIn: null }
-  return (
-    <AbsoluteFill style={{ overflow: 'hidden', background: '#000' }}>
-      <Backdrop prev={NAVY} ch={CHANNELS[0]} f={f} T={T} origin={stage.map(NFC)} />
-      <TapScene ch={CHANNELS[0]} f={f} gf={f} period={durationInFrames} T={T} stage={stage} chip={false} />
     </AbsoluteFill>
   )
 }

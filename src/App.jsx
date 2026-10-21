@@ -7,8 +7,7 @@ import Navbar, { AnnouncementBar } from './components/Navbar'
 import Hero from './components/Hero'
 import PlatformMarquee from './components/PlatformMarquee'
 import Shop from './components/Shop'
-import HowItWorks from './components/HowItWorks'
-import Features from './components/Features'
+import Benefits from './components/Benefits'
 import Statement from './components/Statement'
 import Industries from './components/Industries'
 import Pricing from './components/Pricing'
@@ -54,8 +53,7 @@ export default function App() {
           <Hero />
           <PlatformMarquee />
           <Shop />
-          <HowItWorks />
-          <Features />
+          <Benefits />
           <Statement />
           <Industries />
           <Pricing />

@@ -8,6 +8,8 @@ import ProductModal from './ProductModal'
 import { useCart } from '../lib/cart'
 import { categories, CURRENCY, PRICE, products } from '../data/site'
 
+const CATEGORY_LABEL = { reviews: 'Reviews', social: 'Social', ordering: 'Menu & ordering', payments: 'Payments' }
+
 function ProductCard({ product, index, onOpen }) {
   const { add } = useCart()
   return (
@@ -18,10 +20,10 @@ function ProductCard({ product, index, onOpen }) {
       exit={{ opacity: 0, scale: 0.96 }}
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.8, delay: (index % 4) * 0.08, ease: [0.16, 1, 0.3, 1] }}
-      className="group"
+      className="group card flex flex-col p-2 transition-shadow duration-500 pointer-fine:hover:shadow-[0_30px_60px_-30px_rgba(14,14,12,0.3)] sm:p-2.5"
     >
-      <div className="relative cursor-pointer overflow-hidden rounded-3xl" onClick={() => onOpen(product)}>
-        <div className="relative transition-transform duration-700 ease-(--ease-out-expo) pointer-fine:group-hover:scale-[1.03]">
+      <div className="relative cursor-pointer overflow-hidden rounded-[22px]" onClick={() => onOpen(product)}>
+        <div className="relative transition-transform duration-700 ease-(--ease-out-expo) pointer-fine:group-hover:scale-[1.04]">
           {/* Both formats stay mounted; the card fades in on hover (mouse only, so taps never get stuck on it). */}
           <ProductVisual product={product} format="stand" interactive={false} />
           <div className="absolute inset-0 opacity-0 transition-opacity duration-500 pointer-fine:group-hover:opacity-100">
@@ -29,39 +31,40 @@ function ProductCard({ product, index, onOpen }) {
           </div>
         </div>
         {product.badge && (
-          <span className="absolute left-3 top-3 rounded-full bg-white/90 px-2.5 py-1 text-[10px] sm:left-4 sm:top-4 sm:px-3 sm:text-[11px] font-bold uppercase tracking-wider text-ink shadow-sm backdrop-blur">
+          <span className="absolute left-2.5 top-2.5 rounded-full bg-card px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-ink sm:left-3 sm:top-3">
             {product.badge}
           </span>
         )}
-        <button
-          onClick={(e) => {
-            e.stopPropagation()
-            add(product.id, 'stand')
-          }}
-          className="absolute bottom-3 right-3 flex h-10 w-10 translate-y-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-ink text-sm sm:inset-x-4 sm:bottom-4 sm:h-auto sm:w-auto sm:py-3 font-semibold text-white opacity-100 shadow-lg transition-all duration-500 ease-(--ease-out-expo) hover:bg-brand pointer-fine:translate-y-[130%] pointer-fine:opacity-0 pointer-fine:group-hover:translate-y-0 pointer-fine:group-hover:opacity-100 focus-visible:translate-y-0 focus-visible:opacity-100"
-          aria-label={`Quick add ${product.name} to cart`}
-        >
-          <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">
-            Quick add — {CURRENCY}
-            {PRICE}
-          </span>
-        </button>
+        <span className="absolute right-2.5 top-2.5 hidden rounded-full bg-card/80 px-2.5 py-1 font-mono text-[10px] text-muted backdrop-blur pointer-fine:sm:block">
+          Hover · card
+        </span>
       </div>
-      <div className="mt-3 flex flex-col gap-1 px-1 sm:mt-4 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
-        <div>
-          <h3 className="flex items-center gap-2 text-[15px] font-semibold leading-tight text-ink sm:text-[17px]">
-            <PlatformIcon name={product.icon} className="h-4 w-4 text-ink/60" />
-            <button className="cursor-pointer text-left hover:underline" onClick={() => onOpen(product)}>
-              {product.name}
-            </button>
-          </h3>
-          <p className="mt-1 hidden text-sm leading-snug text-muted sm:block">{product.short}</p>
-        </div>
-        <p className="shrink-0 text-[15px] font-semibold text-ink sm:text-[17px]">
-          {CURRENCY}
-          {PRICE}.00
+      <div className="flex flex-1 flex-col px-2 pb-1.5 pt-3.5 sm:px-3 sm:pt-4">
+        <p className="flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-wider text-muted">
+          <PlatformIcon name={product.icon} className="h-3 w-3" />
+          {CATEGORY_LABEL[product.category]}
         </p>
+        <h3 className="mt-1.5 text-[15px] font-semibold leading-tight tracking-tight sm:text-[17px]">
+          <button className="cursor-pointer text-left hover:underline" onClick={() => onOpen(product)}>
+            {product.name}
+          </button>
+        </h3>
+        <p className="mt-1 hidden text-[13.5px] leading-snug text-muted sm:block">{product.short}</p>
+        <div className="mt-auto flex items-center justify-between gap-2 pt-4">
+          <p className="text-[15px] font-semibold sm:text-[17px]">
+            {CURRENCY}
+            {PRICE}
+            <span className="font-normal text-muted">.00</span>
+          </p>
+          <button
+            onClick={() => add(product.id, 'stand')}
+            className="flex h-9 cursor-pointer items-center gap-1.5 rounded-full bg-ink px-3 text-[13px] font-semibold text-white transition-colors hover:bg-lime hover:text-ink sm:h-10 sm:px-4"
+            aria-label={`Add ${product.name} to cart`}
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">Add</span>
+          </button>
+        </div>
       </div>
     </motion.article>
   )
@@ -82,14 +85,14 @@ export default function Shop() {
             text={`Every Tapilly tag is ${CURRENCY}${PRICE} — programmed with your link, branded with your name, delivered ready to use.`}
           />
           <LayoutGroup>
-            <div className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:justify-end md:px-0" role="tablist">
+            <div className="no-scrollbar flex max-w-full gap-1 overflow-x-auto rounded-full border border-line bg-card p-1" role="tablist">
               {categories.map((c) => (
                 <button
                   key={c.id}
                   role="tab"
                   aria-selected={cat === c.id}
                   onClick={() => setCat(c.id)}
-                  className={`relative shrink-0 cursor-pointer rounded-full px-4 py-2.5 text-sm font-semibold transition-colors ${cat === c.id ? 'text-white' : 'text-ink/70 hover:text-ink'}`}
+                  className={`relative shrink-0 cursor-pointer rounded-full px-4 py-2 text-[13.5px] font-medium transition-colors ${cat === c.id ? 'text-white' : 'text-muted hover:text-ink'}`}
                 >
                   {cat === c.id && (
                     <motion.span
@@ -98,7 +101,6 @@ export default function Shop() {
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                     />
                   )}
-                  {cat !== c.id && <span className="absolute inset-0 rounded-full border border-ink/12 bg-white" />}
                   <span className="relative">{c.label}</span>
                 </button>
               ))}
@@ -106,7 +108,7 @@ export default function Shop() {
           </LayoutGroup>
         </div>
 
-        <motion.div layout className="mt-10 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-6 sm:gap-y-12 md:mt-14 lg:grid-cols-4">
+        <motion.div layout className="mt-10 grid grid-cols-2 gap-2.5 sm:gap-4 md:mt-14 lg:grid-cols-4">
           <AnimatePresence mode="popLayout">
             {list.map((p, i) => (
               <ProductCard key={p.id} product={p} index={i} onOpen={setActive} />

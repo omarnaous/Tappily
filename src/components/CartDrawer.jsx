@@ -153,7 +153,7 @@ function Drawer({ form, setForm }) {
           <>
             <div className="border-b border-line px-6 py-4">
               <p className="flex items-center gap-2 text-sm">
-                <Truck className="h-4 w-4 text-brand" />
+                <Truck className="h-4 w-4 text-ink" />
                 {remaining > 0 ? (
                   <span>
                     Add <b>{remaining}</b> more tag{remaining > 1 ? 's' : ''} for <b>free delivery</b>
@@ -166,7 +166,7 @@ function Drawer({ form, setForm }) {
               </p>
               <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-mist">
                 <motion.div
-                  className="h-full rounded-full bg-brand"
+                  className="h-full rounded-full bg-ink"
                   animate={{ width: `${Math.min(100, (count / FREE_DELIVERY_FROM) * 100)}%` }}
                   transition={{ type: 'spring', stiffness: 120, damping: 20 }}
                 />

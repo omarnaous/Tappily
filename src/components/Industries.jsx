@@ -1,97 +1,80 @@
-import { useLayoutEffect, useRef, useState } from 'react'
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
+import { PlatformIcon } from './Brand'
 import { SectionHeading } from './Reveal'
-import { asset, industries } from '../data/site'
+import { asset, industries, products } from '../data/site'
+import { useMedia } from '../lib/useMedia'
 
-function Card({ item, i }) {
+const byId = Object.fromEntries(products.map((p) => [p.id, p]))
+
+/** Cards pin one after another and the ones underneath shrink back, like a deck being dealt (md and up). */
+function StackCard({ item, i, n, progress }) {
+  const target = 1 - (n - 1 - i) * 0.04
+  const scale = useTransform(progress, [i / n, 1], [1, target])
+  const dim = useTransform(progress, [i / n, 1], [0, (n - 1 - i) * 0.06])
+  const stacked = useMedia('(min-width: 768px)')
   return (
-    <a
-      href="#shop"
-      className="group relative block aspect-[4/5] w-[78vw] shrink-0 overflow-hidden rounded-[28px] bg-ink sm:w-[46vw] md:w-[min(38vw,calc((100svh-340px)*0.8))] lg:w-[min(30vw,calc((100svh-340px)*0.8))]"
-    >
-      <img
-        src={asset(item.img)}
-        alt=""
-        loading="lazy"
-        className="absolute inset-0 h-full w-full object-cover opacity-80 transition-transform duration-[1.4s] ease-(--ease-out-expo) group-hover:scale-110"
-      />
-      <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/30 to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-6 text-white md:p-8">
-        <div>
-          <p className="font-display text-sm font-bold text-brand-2">0{i + 1}</p>
-          <h3 className="h-display mt-2 text-3xl md:text-4xl">{item.title}</h3>
-          <p className="mt-2 text-white/70">{item.text}</p>
+    <div className="md:sticky md:h-[calc(100vh-7rem)]" style={{ top: `calc(6rem + ${i * 18}px)` }}>
+      <motion.article
+        style={{ scale: stacked ? scale : 1, backgroundColor: item.tint, transformOrigin: '50% 0%' }}
+        className="relative grid overflow-hidden rounded-[32px] border border-black/5 md:h-[min(620px,calc(100vh-9rem))] md:grid-cols-[1fr_1.05fr] md:grid-rows-[minmax(0,1fr)]"
+      >
+        <div className="flex flex-col justify-between gap-8 p-7 md:p-12">
+          <div>
+            <p className="font-mono text-[12px] text-ink/50">
+              0{i + 1} / 0{n}
+            </p>
+            <h3 className="h-display mt-4 text-[clamp(2rem,4vw,3.6rem)]">{item.title}</h3>
+            <p className="mt-4 max-w-md text-[17px] leading-relaxed text-ink/70">{item.text}</p>
+          </div>
+          <div>
+            <p className="eyebrow !text-ink/50">Recommended tags</p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              {item.tags.map((t) => (
+                <span key={t} className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3.5 py-2 text-sm font-medium backdrop-blur">
+                  <PlatformIcon name={byId[t].icon} className="h-4 w-4" />
+                  {byId[t].name.replace(' Tag', '')}
+                </span>
+              ))}
+            </div>
+            <a href="#shop" className="btn-primary group mt-6 !py-3">
+              Shop for {item.title.split(' ')[0].toLowerCase().replace(',', '')}
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:rotate-45" />
+            </a>
+          </div>
         </div>
-        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-ink transition-transform duration-500 group-hover:rotate-45">
-          <ArrowUpRight className="h-5 w-5" />
-        </span>
-      </div>
-    </a>
-  )
-}
-
-const heading = (
-  <SectionHeading
-    eyebrow="Made for"
-    title="Every place people tap."
-    text="From a café in Hamra to a salon in Jounieh — if customers visit you, Tapilly turns that visit into growth."
-  />
-)
-
-/** Desktop: the section pins and vertical scroll drives the cards sideways until the last one is fully in view. */
-function PinnedRow() {
-  const section = useRef(null)
-  const track = useRef(null)
-  const [distance, setDistance] = useState(0)
-
-  useLayoutEffect(() => {
-    const measure = () => {
-      if (!track.current) return
-      setDistance(Math.max(0, track.current.scrollWidth - window.innerWidth))
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(track.current)
-    window.addEventListener('resize', measure)
-    return () => {
-      ro.disconnect()
-      window.removeEventListener('resize', measure)
-    }
-  }, [])
-
-  const { scrollYProgress } = useScroll({ target: section, offset: ['start start', 'end end'] })
-  const raw = useTransform(scrollYProgress, [0, 1], [0, -distance])
-  const x = useSpring(raw, { stiffness: 220, damping: 40, mass: 0.4 })
-
-  return (
-    <section ref={section} className="relative hidden bg-white md:block" style={{ height: `calc(100vh + ${distance}px)` }}>
-      <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden">
-        <div className="container-x">{heading}</div>
-        <motion.div ref={track} style={{ x }} className="mt-12 flex w-max gap-5 pl-[max(1rem,calc((100vw-1320px)/2+2.5rem))] pr-[6vw]">
-          {industries.map((it, i) => (
-            <Card key={it.title} item={it} i={i} />
-          ))}
-        </motion.div>
-      </div>
-    </section>
+        <div className="relative min-h-0 p-3 pt-0 md:p-4 md:pl-0">
+          <img
+            src={asset(item.img)}
+            alt={`Tapilly tags in ${item.title.toLowerCase()}`}
+            loading="lazy"
+            className="aspect-[4/5] h-full w-full rounded-[24px] object-cover md:aspect-auto"
+          />
+        </div>
+        {stacked && <motion.div className="pointer-events-none absolute inset-0 bg-ink" style={{ opacity: dim }} />}
+      </motion.article>
+    </div>
   )
 }
 
 export default function Industries() {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   return (
-    <>
-      <PinnedRow />
-      <section className="bg-white py-24 md:hidden">
-        <div className="container-x">{heading}</div>
-        <div className="no-scrollbar mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4">
+    <section className="bg-paper py-24 md:py-32">
+      <div className="container-x">
+        <SectionHeading
+          eyebrow="Made for"
+          title="Every place people tap."
+          text="Pick a setup that fits your business. Each scene shows the tag and what opens on your customer's phone."
+        />
+        <div ref={ref} className="mt-12 flex flex-col gap-5 md:mt-16 md:gap-0">
           {industries.map((it, i) => (
-            <div key={it.title} className="snap-start">
-              <Card item={it} i={i} />
-            </div>
+            <StackCard key={it.id} item={it} i={i} n={industries.length} progress={scrollYProgress} />
           ))}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   )
 }

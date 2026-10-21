@@ -39,19 +39,19 @@ export default function Pricing() {
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.9, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 whileHover={{ y: -8 }}
-                className={`relative flex flex-col rounded-[32px] p-8 md:p-10 ${p.popular ? 'bg-ink text-white shadow-[0_40px_80px_-30px_rgba(8,85,214,0.55)] lg:-my-4 lg:py-14' : 'border border-line bg-white'}`}
+                className={`relative flex flex-col rounded-[32px] p-8 md:p-10 ${p.popular ? 'bg-ink text-white shadow-[0_40px_80px_-30px_rgba(14,14,12,0.55)] lg:-my-4 lg:py-14' : 'border border-line bg-card'}`}
               >
                 {p.popular && (
                   <>
                     <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[32px]">
-                      <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-brand/50 blur-3xl" />
+                      <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-lime/25 blur-3xl" />
                     </div>
-                    <span className="absolute right-6 top-6 inline-flex items-center gap-1 rounded-full bg-brand px-3 py-1 text-[11px] font-bold uppercase tracking-wider">
+                    <span className="absolute right-6 top-6 inline-flex items-center gap-1 rounded-full bg-lime px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-ink">
                       <Sparkles className="h-3 w-3" /> Most popular
                     </span>
                   </>
                 )}
-                <h3 className="relative font-display text-2xl font-bold">{p.name}</h3>
+                <h3 className="relative text-2xl font-semibold tracking-tight">{p.name}</h3>
                 <p className={`relative mt-1 ${p.popular ? 'text-white/60' : 'text-muted'}`}>{p.blurb}</p>
                 <p className="relative mt-8 flex items-end gap-2">
                   <span className="h-display text-7xl">
@@ -66,7 +66,7 @@ export default function Pricing() {
                 <ul className="relative mt-8 space-y-3">
                   {p.features.map((f) => (
                     <li key={f} className="flex gap-3 text-[15px]">
-                      <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${p.popular ? 'bg-brand' : 'bg-ink'} text-white`}>
+                      <span className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full ${p.popular ? 'bg-lime text-ink' : 'bg-ink text-white'}`}>
                         <Check className="h-3 w-3" strokeWidth={3} />
                       </span>
                       {f}
